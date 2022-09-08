@@ -1,10 +1,7 @@
 package com.SVKB.BackendApp.model;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -14,6 +11,8 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode
+@ToString
 public class CategoryModel {
 
     @Id
