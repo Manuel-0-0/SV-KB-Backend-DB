@@ -17,6 +17,6 @@ public class CategoryModel {
 
     @Id
     private Long Id;
-    private String CategoryName;
-    private Integer ArticleNum;
+    private String categoryName;
+    private Integer articleNum;
 }

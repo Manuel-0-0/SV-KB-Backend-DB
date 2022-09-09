@@ -9,5 +9,6 @@ import java.util.Optional;
 @Repository
 public interface CategoryRepo extends JpaRepository<CategoryModel,Long> {
 
+    Boolean existsByCategoryName(String categoryName);
 
 }
