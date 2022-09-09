@@ -3,13 +3,15 @@ package com.SVKB.BackendApp.service;
 import com.SVKB.BackendApp.DTOs.CategoryModelDto;
 import com.SVKB.BackendApp.model.CategoryModel;
 import com.SVKB.BackendApp.repo.CategoryRepo;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class CategoryService {
 
-    CategoryRepo categoryRepo;
+    private CategoryRepo categoryRepo;
 
 
     public ResponseEntity<String> CreateCategory(CategoryModelDto categoryModelDto){
