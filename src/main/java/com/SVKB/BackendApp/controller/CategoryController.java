@@ -6,7 +6,6 @@ import com.SVKB.BackendApp.service.CategoryService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,8 +26,8 @@ public class CategoryController {
     }
 
     @GetMapping(path = "/AllCategories")
-    public ResponseEntity<?> AllPosts(){
+    public List<CategoryModel> AllPosts(){
         log.info(categoryService.getAllTheCategories().toString());
-        return (ResponseEntity<?>) categoryService.getAllTheCategories();
+        return categoryService.getAllTheCategories();
     }
 }
