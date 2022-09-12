@@ -30,4 +30,10 @@ public class CategoryController {
         log.info(categoryService.getAllTheCategories().toString());
         return categoryService.getAllTheCategories();
     }
+
+    @PutMapping(path = "/UpdateLikes")
+    public CategoryModel UpdateNumberofArticles(@RequestBody CategoryModel categoryModel){
+        log.info(categoryModel.toString());
+        return categoryService.UpdateArticleNum(categoryModel.getCategoryName());
+    }
 }
