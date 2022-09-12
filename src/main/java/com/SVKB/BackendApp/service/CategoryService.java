@@ -37,6 +37,13 @@ public class CategoryService {
         return NewCategory;
     }
 
+    public CategoryModel UpdateArticleNum(String categoryName){
+        CategoryModel categoryModel=categoryRepo.findByCategoryName(categoryName);
+        categoryModel.setArticleNum(categoryModel.getArticleNum()+1);
+        categoryModel.setCategoryName(categoryModel.getCategoryName());
+        categoryRepo.save(categoryModel);
+        return categoryModel;
+    }
 //    private CategoryModelDto MapFromModelToRequest(CategoryModel categoryModel){
 //
 //    }
