@@ -2,10 +2,12 @@ package com.SVKB.BackendApp.controller;
 
 import com.SVKB.BackendApp.DTOs.CategoryModelDto;
 import com.SVKB.BackendApp.model.CategoryModel;
+import com.SVKB.BackendApp.repo.CategoryRepo;
 import com.SVKB.BackendApp.service.CategoryService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.List;
 public class CategoryController {
 
     private CategoryService categoryService;
+    private CategoryRepo categoryRepo;
 
     @PostMapping(path="/create")
     public ResponseEntity<?> CreateCategory(@RequestBody CategoryModelDto categoryModelDto){
@@ -31,9 +34,11 @@ public class CategoryController {
         return categoryService.getAllTheCategories();
     }
 
-    @PutMapping(path = "/UpdateLikes")
-    public CategoryModel UpdateNumberofArticles(@RequestBody CategoryModel categoryModel){
-        log.info(categoryModel.toString());
-        return categoryService.UpdateArticleNum(categoryModel.getCategoryName());
+    @PutMapping(path = "/Update-C/{id}")
+    public ResponseEntity<?> UpdateNumberofArticles(@PathVariable Long id){
+        log.info(id.toString());
+        log.info(categoryRepo.findById(id).toString());
+        return ResponseEntity.ok(categoryService.UpdateArticle(id));
     }
+
 }

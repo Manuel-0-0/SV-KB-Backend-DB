@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -33,18 +34,14 @@ public class CategoryService {
     public CategoryModel MapFromDtoToCategoryModel(CategoryModelDto categoryModelDto){
         CategoryModel NewCategory= new CategoryModel();
         NewCategory.setCategoryName(categoryModelDto.getCategoryName());
+        NewCategory.setArticleNum(0);
 
         return NewCategory;
     }
 
-    public CategoryModel UpdateArticleNum(String categoryName){
-        CategoryModel categoryModel=categoryRepo.findByCategoryName(categoryName);
-        categoryModel.setArticleNum(categoryModel.getArticleNum()+1);
-        categoryModel.setCategoryName(categoryModel.getCategoryName());
-        categoryRepo.save(categoryModel);
-        return categoryModel;
+    public Optional<CategoryModel> UpdateArticle(Long Id){
+        categoryRepo.updateArticleNum(Id);
+        return categoryRepo.findById(Id);
     }
-//    private CategoryModelDto MapFromModelToRequest(CategoryModel categoryModel){
-//
-//    }
+
 }
