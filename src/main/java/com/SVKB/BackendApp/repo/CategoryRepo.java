@@ -24,6 +24,9 @@ public interface CategoryRepo extends JpaRepository<CategoryModel,Long> {
     )
     void updateArticleNum(@Param("Id") Long Id);
 
+//    List<CategoryModel> findAll();
+
+
     List<CategoryModel> findAll();
 
 }

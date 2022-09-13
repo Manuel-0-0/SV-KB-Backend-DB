@@ -23,6 +23,6 @@ public class ArticleModel {
     private LocalDateTime DateUpdated;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    private CategoryModel categoryModel;
+    @JoinColumn(name = "Id")
+    private CategoryModel CategoryArticles;
 }

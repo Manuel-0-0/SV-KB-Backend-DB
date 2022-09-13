@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.Optional;
+import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -24,6 +25,9 @@ public class CategoryModel {
     private Long Id;
     private String categoryName;
     private Integer articleNum;
+
+    @OneToMany(mappedBy = "CategoryArticles")
+    private Set<ArticleModel> CategoryArticles;
 
 
 }
