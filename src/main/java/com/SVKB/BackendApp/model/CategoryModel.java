@@ -1,6 +1,7 @@
 package com.SVKB.BackendApp.model;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,13 +22,26 @@ public class CategoryModel {
 
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @SequenceGenerator(
+            name = "categoryIdGenerator",
+            allocationSize = 1,
+            sequenceName = "categoryIdGenerator"
+    )
+    @GeneratedValue(
+            generator = "categoryIdGenerator",
+            strategy= GenerationType.SEQUENCE)
     private Long Id;
     private String categoryName;
     private Integer articleNum;
 
-    @OneToMany(mappedBy = "CategoryArticles")
+    @OneToMany(mappedBy = "CategoryArticles",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<ArticleModel> CategoryArticles;
 
 
+    public CategoryModel(String categoryName, Integer articleNum, Set<ArticleModel> categoryArticles) {
+        this.categoryName = categoryName;
+        this.articleNum = articleNum;
+        CategoryArticles = categoryArticles;
+    }
 }

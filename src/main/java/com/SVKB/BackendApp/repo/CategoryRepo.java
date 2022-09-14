@@ -12,10 +12,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CategoryRepo extends JpaRepository<CategoryModel,Long> {
+public interface CategoryRepo extends JpaRepository<CategoryModel, Long> {
 
     Boolean existsByCategoryName(String categoryName);
 
+    public Optional<CategoryModel> findById(Long Id);
     @Modifying
     @Transactional
     @Query(
@@ -24,7 +25,6 @@ public interface CategoryRepo extends JpaRepository<CategoryModel,Long> {
     )
     void updateArticleNum(@Param("Id") Long Id);
 
-//    List<CategoryModel> findAll();
 
 
     List<CategoryModel> findAll();

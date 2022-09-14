@@ -2,17 +2,19 @@ package com.SVKB.BackendApp.DTOs;
 
 import com.SVKB.BackendApp.model.Content;
 import lombok.Data;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Setter
-public class ArticleModelDto implements Serializable {
+@Getter
+public class ArticleModelDto{
     private final String title;
-    private final LocalDateTime DateCreated;
-    private final Content content;
-    private final LocalDateTime DateUpdated;
+    private final String content;
+//    private final List<String> images;
     private final Long CategoryId;
 }

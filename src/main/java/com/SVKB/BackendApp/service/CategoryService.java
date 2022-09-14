@@ -39,9 +39,9 @@ public class CategoryService {
         return NewCategory;
     }
 
-    public Optional<CategoryModel> UpdateArticle(Long Id){
-        categoryRepo.updateArticleNum(Id);
-        return categoryRepo.findById(Id);
-    }
+//    public CategoryModel UpdateArticle(Long Id){
+//        categoryRepo.updateArticleNum(Id);
+//        return categoryRepo.findById(Id);
+//    }
 
 }

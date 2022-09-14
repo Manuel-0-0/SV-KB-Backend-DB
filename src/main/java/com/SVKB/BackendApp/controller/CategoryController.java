@@ -19,7 +19,8 @@ import java.util.List;
 public class CategoryController {
 
     private CategoryService categoryService;
-    private CategoryRepo categoryRepo;
+
+//    private CategoryRepo categoryRepo;
 
     @PostMapping(path="/create")
     public ResponseEntity<?> CreateCategory(@RequestBody CategoryModelDto categoryModelDto){
@@ -34,11 +35,11 @@ public class CategoryController {
         return categoryService.getAllTheCategories();
     }
 
-    @PutMapping(path = "/Update-C/{id}")
-    public ResponseEntity<?> UpdateNumberofArticles(@PathVariable Long id){
-        log.info(id.toString());
-        log.info(categoryRepo.findById(id).toString());
-        return ResponseEntity.ok(categoryService.UpdateArticle(id));
-    }
+//    @PutMapping(path = "/Update-C/{id}")
+//    public ResponseEntity<?> UpdateNumberofArticles(@PathVariable Long id){
+//        log.info(id.toString());
+//        log.info(categoryRepo.findById(id).toString());
+//        return ResponseEntity.ok(categoryService.UpdateArticle(id));
+//    }
 
 }
