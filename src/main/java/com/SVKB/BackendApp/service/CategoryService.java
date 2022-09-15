@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -28,8 +27,7 @@ public class CategoryService {
 
 
     public List<CategoryModel> getAllTheCategories(){
-        List<CategoryModel> categories = categoryRepo.findAll();
-        return categories.stream().toList();
+        return categoryRepo.findAll();
     }
     public CategoryModel MapFromDtoToCategoryModel(CategoryModelDto categoryModelDto){
         CategoryModel NewCategory= new CategoryModel();
