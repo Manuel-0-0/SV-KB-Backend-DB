@@ -1,6 +1,7 @@
 package com.SVKB.BackendApp.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
@@ -34,7 +35,7 @@ public class CategoryModel {
     private String categoryName;
     private Integer articleNum;
 
-    @OneToMany(mappedBy = "CategoryArticles",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "categoryArticles",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference
     private Set<ArticleModel> CategoryArticles;
 

@@ -20,7 +20,7 @@ public class CategoryController {
 
     private CategoryService categoryService;
 
-//    private CategoryRepo categoryRepo;
+    private CategoryRepo categoryRepo;
 
     @PostMapping(path="/create")
     public ResponseEntity<?> CreateCategory(@RequestBody CategoryModelDto categoryModelDto){
@@ -35,6 +35,12 @@ public class CategoryController {
         return categoryService.getAllTheCategories();
     }
 
+
+    @GetMapping(path = "/{Id}")
+    public ResponseEntity<?> oneCategory(@RequestParam Long Id){
+        return ResponseEntity.ok(categoryRepo.findById(Id));
+
+    }
 //    @PutMapping(path = "/Update-C/{id}")
 //    public ResponseEntity<?> UpdateNumberofArticles(@PathVariable Long id){
 //        log.info(id.toString());

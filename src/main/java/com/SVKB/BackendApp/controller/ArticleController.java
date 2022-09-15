@@ -31,4 +31,5 @@ public class ArticleController {
         return ResponseEntity.ok(articleRepo.findAll());
     }
 
+
 }

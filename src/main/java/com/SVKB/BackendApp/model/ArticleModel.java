@@ -1,12 +1,11 @@
 package com.SVKB.BackendApp.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 
 @Entity
@@ -39,8 +38,9 @@ public class ArticleModel {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "Category_Id")
     @JsonBackReference
-    private CategoryModel CategoryArticles;
+    private CategoryModel categoryArticles;
 
-    public void setCategoryArticles(Optional<CategoryModel> byId) {
-    }
+
+//    public void setcategoryArticles(Optional<CategoryModel> byId) {
+//    }
 }

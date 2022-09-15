@@ -25,8 +25,11 @@ public interface CategoryRepo extends JpaRepository<CategoryModel, Long> {
     )
     void updateArticleNum(@Param("Id") Long Id);
 
-
-
+    @Query(
+            value = "Select * from tbl_category",
+            nativeQuery = true
+    )
     List<CategoryModel> findAll();
+
 
 }

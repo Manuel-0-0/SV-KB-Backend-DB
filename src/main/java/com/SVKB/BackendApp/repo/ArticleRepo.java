@@ -1,5 +1,6 @@
 package com.SVKB.BackendApp.repo;
 import com.SVKB.BackendApp.model.ArticleModel;
+import com.SVKB.BackendApp.model.CategoryModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,4 +16,6 @@ public interface ArticleRepo extends JpaRepository<ArticleModel,Long> {
             nativeQuery = true
     )
     List<ArticleModel> findByTitle( String title);
+
+
 }
