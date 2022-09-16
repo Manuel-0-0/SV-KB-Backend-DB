@@ -6,6 +6,7 @@ import com.SVKB.BackendApp.model.CategoryModel;
 import com.SVKB.BackendApp.repo.ArticleRepo;
 import com.SVKB.BackendApp.repo.CategoryRepo;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,10 +25,12 @@ public class ArticleService {
     @Transactional
     public ResponseEntity<?> createArticle(ArticleModelDto articleModelDto){
         ArticleModel articleModel=MapFromDtoArticleModel(articleModelDto);
-        articleRepo.save(articleModel);
-
-        return ResponseEntity.ok(articleModel+"new Article added!");
-
+        if(categoryRepo.findById(articleModelDto.getCategoryId()).isPresent()){
+            articleRepo.save(articleModel);
+            return ResponseEntity.ok(articleModel+"new Article added!");
+        }else {
+            return (ResponseEntity<?>) ResponseEntity.badRequest();
+        }
 
     }
 
@@ -46,6 +49,7 @@ public class ArticleService {
         log.info("target category: "+ categoryRepo.findById(categoryModelID.getId()));
         log.info("stored category: "+ categoryModelID);
         log.info("new article category: " + newArticle.getCategoryArticles());
+
         return  newArticle;
 
     }

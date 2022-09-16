@@ -35,14 +35,16 @@ public class CategoryModel {
     private String categoryName;
     private Integer articleNum;
 
-    @OneToMany(mappedBy = "categoryArticles",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private Set<ArticleModel> CategoryArticles;
+//    @OneToMany(mappedBy = "categoryArticles",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JsonManagedReference
+//    private Set<ArticleModel> CategoryArticles;
 
 
-    public CategoryModel(String categoryName, Integer articleNum, Set<ArticleModel> categoryArticles) {
+    public CategoryModel(String categoryName, Integer articleNum
+//            , Set<ArticleModel> categoryArticles
+    ) {
         this.categoryName = categoryName;
         this.articleNum = articleNum;
-        CategoryArticles = categoryArticles;
+//        CategoryArticles = categoryArticles;
     }
 }

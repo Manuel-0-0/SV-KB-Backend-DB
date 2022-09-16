@@ -21,7 +21,7 @@ public class ArticleController {
 
     @PostMapping(path = "/NewArticle")
     public ResponseEntity<?> CreateNewArticles(@RequestBody ArticleModelDto articleModelDto){
-        log.info(articleRepo.findByTitle(articleModelDto.getTitle()).toString());
+//        log.info(articleRepo.findByTitle(articleModelDto.getTitle()).toString());
         articleService.createArticle(articleModelDto);
         return ResponseEntity.ok(articleModelDto+"created");
     }
