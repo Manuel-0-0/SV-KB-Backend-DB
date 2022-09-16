@@ -25,6 +25,14 @@ public interface CategoryRepo extends JpaRepository<CategoryModel, Long> {
     )
     void updateArticleNum(@Param("Id") Long Id);
 
+    @Modifying
+    @Transactional
+    @Query(
+            value = "update tbl_category SET article_num= article_num - 1 WHERE Id=:Id",
+            nativeQuery = true
+    )
+    void backdateArticleNum(@Param("Id") Long Id);
+
     @Query(
             value = "Select * from tbl_category",
             nativeQuery = true

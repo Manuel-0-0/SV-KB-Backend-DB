@@ -31,5 +31,10 @@ public class ArticleController {
         return ResponseEntity.ok(articleRepo.findAll());
     }
 
+    @DeleteMapping(path = "/Delete/{Id}")
+    public ResponseEntity<?> DeleteArticle(@PathVariable Long Id){
+        return articleService.DeleteArticle(Id);
+    }
+
 
 }

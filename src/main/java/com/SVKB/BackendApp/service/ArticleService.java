@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -33,6 +34,20 @@ public class ArticleService {
             return (ResponseEntity<?>) ResponseEntity.badRequest();
         }
 
+    }
+
+    public ResponseEntity<?> DeleteArticle(Long Id){
+        if(articleRepo.findById(Id).isPresent()){
+            ArticleModel articleModel= articleRepo.findById(Id).get();
+            categoryRepo.backdateArticleNum(articleModel.getCategoryArticles().getId());
+            articleModel.setCategoryArticles(null);
+
+            articleRepo.deleteById(Id);
+            return ResponseEntity.ok("Deleted!");
+
+        }else {
+            return (ResponseEntity<?>) ResponseEntity.notFound();
+        }
     }
 
 

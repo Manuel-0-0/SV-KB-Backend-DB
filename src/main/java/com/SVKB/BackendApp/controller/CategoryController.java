@@ -37,7 +37,7 @@ public class CategoryController {
 
 
     @GetMapping(path = "/{Id}")
-    public ResponseEntity<?> oneCategory(@RequestParam Long Id){
+    public ResponseEntity<?> oneCategory(@PathVariable Long Id){
         return ResponseEntity.ok(categoryRepo.findById(Id));
 
     }
