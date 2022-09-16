@@ -1,6 +1,7 @@
 package com.SVKB.BackendApp.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @EqualsAndHashCode
 @ToString
 @Table(name = "tbl_article")
@@ -40,7 +42,4 @@ public class ArticleModel {
     @JsonBackReference
     private CategoryModel categoryArticles;
 
-
-//    public void setcategoryArticles(Optional<CategoryModel> byId) {
-//    }
 }

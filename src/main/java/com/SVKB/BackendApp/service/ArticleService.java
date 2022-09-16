@@ -27,6 +27,7 @@ public class ArticleService {
         ArticleModel articleModel=MapFromDtoArticleModel(articleModelDto);
         if(categoryRepo.findById(articleModelDto.getCategoryId()).isPresent()){
             articleRepo.save(articleModel);
+            categoryRepo.updateArticleNum(articleModelDto.getCategoryId());
             return ResponseEntity.ok(articleModel+"new Article added!");
         }else {
             return (ResponseEntity<?>) ResponseEntity.badRequest();
