@@ -15,5 +15,4 @@ public interface ArticleRepo extends JpaRepository<ArticleModel,Long> {
     )
     List<ArticleModel> findByTitle( String title);
 
-    boolean findByCategoryArticles(Long Id);
 }
