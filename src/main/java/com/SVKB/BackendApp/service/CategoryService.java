@@ -25,6 +25,16 @@ public class CategoryService {
         return ResponseEntity.ok(categoryModel+"new Category added!");
     }
 
+    public ResponseEntity<?> UpdateCategory(Long Id, CategoryModelDto categoryModelDto){
+        if(categoryRepo.findById(Id).isPresent()){
+            categoryRepo.UpdateCategoryName(Id, categoryModelDto.getCategoryName());
+            return ResponseEntity.ok(categoryRepo.findById(Id) + "new Category added!");
+        }else {
+            return ResponseEntity.badRequest().body("Category not found!");
+        }
+        }
+
+
 
     public List<CategoryModel> getAllTheCategories(){
         return categoryRepo.findAll();

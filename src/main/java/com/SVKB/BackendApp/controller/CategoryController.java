@@ -24,14 +24,12 @@ public class CategoryController {
 
     @PostMapping(path="/create")
     public ResponseEntity<?> CreateCategory(@RequestBody CategoryModelDto categoryModelDto){
-        log.info(String.valueOf(categoryModelDto));
         return categoryService.CreateCategory(categoryModelDto);
 
     }
 
     @GetMapping(path = "/AllCategories")
     public List<CategoryModel> AllPosts(){
-        log.info(categoryService.getAllTheCategories().toString());
         return categoryService.getAllTheCategories();
     }
 
@@ -41,11 +39,11 @@ public class CategoryController {
         return ResponseEntity.ok(categoryRepo.findById(Id));
 
     }
-//    @PutMapping(path = "/Update-C/{id}")
-//    public ResponseEntity<?> UpdateNumberofArticles(@PathVariable Long id){
-//        log.info(id.toString());
-//        log.info(categoryRepo.findById(id).toString());
-//        return ResponseEntity.ok(categoryService.UpdateArticle(id));
-//    }
+
+    @PutMapping(path = "/Update/{Id}")
+    public ResponseEntity<?> EditCategory(@PathVariable Long Id, @RequestBody CategoryModelDto categoryModelDto){
+        categoryService.UpdateCategory(Id,categoryModelDto);
+        return ResponseEntity.ok("updated!");
+    }
 
 }
