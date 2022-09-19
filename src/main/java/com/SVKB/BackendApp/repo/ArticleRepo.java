@@ -15,7 +15,8 @@ public interface ArticleRepo extends JpaRepository<ArticleModel,Long> {
     )
     List<ArticleModel> findByTitle( String title);
 
-    @Query("SELECT p FROM tbl_article p WHERE CONCAT(p.title,'') LIKE %?1%")
+    @Query(value = "SELECT * FROM tbl_article p WHERE CONCAT(p.title,'') LIKE %?1%",
+    nativeQuery = true)
     List<ArticleModel> findBySearch(String keyword);
 
 }

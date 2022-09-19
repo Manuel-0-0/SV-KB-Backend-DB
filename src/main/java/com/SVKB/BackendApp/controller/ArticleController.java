@@ -40,5 +40,10 @@ public class ArticleController {
         return articleService.searchArticles(keyword);
     }
 
+    @GetMapping(path = "/{Id}")
+    public ResponseEntity<?> OneArticle(@PathVariable Long Id){
+        return articleService.oneArticle(Id);
+    }
+
 
 }

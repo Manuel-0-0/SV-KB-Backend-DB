@@ -8,6 +8,7 @@ import com.SVKB.BackendApp.repo.CategoryRepo;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,14 @@ public class ArticleService {
             return (ResponseEntity<?>) ResponseEntity.badRequest();
         }
 
+    }
+
+    public ResponseEntity<?> oneArticle(Long Id){
+        if(articleRepo.existsById(Id)){
+        return ResponseEntity.ok(articleRepo.findById(Id));
+    }else{
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Article can't be found.");
+        }
     }
 
     public ResponseEntity<?> searchArticles(String keyword){
