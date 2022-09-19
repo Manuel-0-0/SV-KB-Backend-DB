@@ -68,7 +68,23 @@ public class ArticleService {
         }
     }
 
+    public ResponseEntity<?> ArticlesByCategories(Long CategoryId){
+        List<ArticleModel> results= articleRepo.articlesByCategories(CategoryId);
+        return ResponseEntity.status(HttpStatus.OK).body(results);
+    }
 
+    public ResponseEntity<?> UpdateArticle(Long Id, ArticleModelDto articleModelDto){
+        if(articleRepo.existsById(Id)){
+            ArticleModel articleModel =articleRepo.findById(Id).get();
+            articleModel.setContent(articleModelDto.getContent());
+            articleModel.setTitle(articleModelDto.getTitle());
+            articleModel.setDateUpdated(LocalDateTime.now());
+            articleRepo.save(articleModel);
+            return ResponseEntity.status(200).body(articleRepo.findById(Id)+" Updated");
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cant be found");
+        }
+    }
 
 
     public ArticleModel MapFromDtoArticleModel(ArticleModelDto articleModelDto){

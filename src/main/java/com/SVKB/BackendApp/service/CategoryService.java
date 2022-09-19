@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @AllArgsConstructor
@@ -22,7 +23,7 @@ public class CategoryService {
         }
         CategoryModel categoryModel= MapFromDtoToCategoryModel(categoryModelDto);
         categoryRepo.save(categoryModel);
-        return ResponseEntity.ok(categoryModel+"new Category added!");
+        return ResponseEntity.ok(categoryModel.getCategoryName().toUpperCase(Locale.ROOT)+" Category added!");
     }
 
     public ResponseEntity<?> UpdateCategory(Long Id, CategoryModelDto categoryModelDto){

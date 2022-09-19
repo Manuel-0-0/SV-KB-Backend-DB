@@ -19,4 +19,8 @@ public interface ArticleRepo extends JpaRepository<ArticleModel,Long> {
     nativeQuery = true)
     List<ArticleModel> findBySearch(String keyword);
 
+    @Query(value = "SELECT * FROM tbl_article p WHERE Category_Id=:CategoryId",
+    nativeQuery = true)
+    List<ArticleModel> articlesByCategories(Long CategoryId);
+
 }

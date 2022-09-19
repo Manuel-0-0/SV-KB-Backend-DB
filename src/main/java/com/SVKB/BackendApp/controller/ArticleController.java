@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Locale;
+
 @Slf4j
 @RestController
 @RequestMapping(path = "/api/v1/articles")
@@ -22,7 +24,7 @@ public class ArticleController {
     @PostMapping(path = "/NewArticle")
     public ResponseEntity<?> CreateNewArticles(@RequestBody ArticleModelDto articleModelDto){
         articleService.createArticle(articleModelDto);
-        return ResponseEntity.ok(articleModelDto+"created");
+        return ResponseEntity.ok(articleModelDto.getTitle().toUpperCase(Locale.ROOT)+" Created");
     }
 
     @GetMapping(path = "/All")
@@ -45,5 +47,14 @@ public class ArticleController {
         return articleService.oneArticle(Id);
     }
 
+    @GetMapping(path = "/")
+    public ResponseEntity<?> SearchByCategories(@RequestParam Long CategoryId){
+        return articleService.ArticlesByCategories(CategoryId);
+    }
+
+    @PutMapping(path ="/Update/{Id}")
+    public ResponseEntity<?> UpdateArticles(@PathVariable Long Id, @RequestBody ArticleModelDto articleModelDto){
+        return articleService.UpdateArticle(Id,articleModelDto);
+    }
 
 }
