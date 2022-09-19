@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -36,6 +37,14 @@ public class ArticleService {
 
     }
 
+    public ResponseEntity<?> searchArticles(String keyword){
+        List<ArticleModel> results= articleRepo.findBySearch(keyword);
+        if(results==null){
+            return ResponseEntity.ok("no results found!");
+        }else {
+            return ResponseEntity.ok(results);
+        }
+    }
     public ResponseEntity<?> DeleteArticle(Long Id){
         if(articleRepo.findById(Id).isPresent()){
             ArticleModel articleModel= articleRepo.findById(Id).get();
@@ -49,6 +58,8 @@ public class ArticleService {
             return (ResponseEntity<?>) ResponseEntity.notFound();
         }
     }
+
+
 
 
     public ArticleModel MapFromDtoArticleModel(ArticleModelDto articleModelDto){
@@ -70,5 +81,7 @@ public class ArticleService {
 
     }
 //
+
+
 
 }

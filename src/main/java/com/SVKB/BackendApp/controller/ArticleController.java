@@ -35,5 +35,10 @@ public class ArticleController {
         return articleService.DeleteArticle(Id);
     }
 
+    @GetMapping(path="/Search")
+    public ResponseEntity<?> SearchArticles(@RequestParam String keyword){
+        return articleService.searchArticles(keyword);
+    }
+
 
 }
