@@ -48,9 +48,9 @@ public class ArticleService {
     public ResponseEntity<?> searchArticles(String keyword){
         List<ArticleModel> results= articleRepo.findBySearch(keyword);
         if(results==null){
-            return ResponseEntity.ok("no results found!");
+            return ResponseEntity.ok().body("no results found!");
         }else {
-            return ResponseEntity.ok(results);
+            return ResponseEntity.ok().body(results);
         }
     }
     public ResponseEntity<?> DeleteArticle(Long Id){
@@ -63,7 +63,7 @@ public class ArticleService {
             return ResponseEntity.ok("Deleted!");
 
         }else {
-            return (ResponseEntity<?>) ResponseEntity.notFound();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("There is no such article.");
         }
     }
 
