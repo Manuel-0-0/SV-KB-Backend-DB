@@ -1,7 +1,9 @@
 package com.SVKB.BackendApp.service;
 
 import com.SVKB.BackendApp.DTOs.CategoryModelDto;
+import com.SVKB.BackendApp.model.ArticleModel;
 import com.SVKB.BackendApp.model.CategoryModel;
+import com.SVKB.BackendApp.repo.ArticleRepo;
 import com.SVKB.BackendApp.repo.CategoryRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import java.util.Locale;
 public class CategoryService {
 
     private CategoryRepo categoryRepo;
+    private ArticleRepo articleRepo;
 
 
     public ResponseEntity<String> CreateCategory(CategoryModelDto categoryModelDto){
@@ -35,7 +38,14 @@ public class CategoryService {
         }
         }
 
-
+        public ResponseEntity<?> DeleteCategory(Long Id){
+        List<ArticleModel> articles= articleRepo.articlesByCategories(Id);
+        categoryRepo.deleteById(Id);
+            for (ArticleModel article:articles) {
+                articleRepo.deleteById(article.getId());
+            }
+            return ResponseEntity.ok().body("Deleted!");
+        }
 
     public List<CategoryModel> getAllTheCategories(){
         return categoryRepo.findAll();

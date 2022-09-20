@@ -6,7 +6,6 @@ import com.SVKB.BackendApp.model.CategoryModel;
 import com.SVKB.BackendApp.repo.ArticleRepo;
 import com.SVKB.BackendApp.repo.CategoryRepo;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -105,8 +104,5 @@ public class ArticleService {
         return  newArticle;
 
     }
-//
-
-
 
 }

@@ -46,4 +46,9 @@ public class CategoryController {
         return ResponseEntity.ok("updated!");
     }
 
+    @DeleteMapping(path = "Delete/{Id}")
+    public ResponseEntity<?> DeleteCategory(@PathVariable Long Id){
+        return categoryService.DeleteCategory(Id);
+    }
+
 }
