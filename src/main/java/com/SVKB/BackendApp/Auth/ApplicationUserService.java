@@ -20,6 +20,6 @@ public class ApplicationUserService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         SvUser svUser= svUserRepo.findByUsername(username);
-        return svUser;
+        return ApplicationUser.build(svUser);
     }
 }
