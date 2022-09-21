@@ -15,11 +15,18 @@ import java.util.Set;
 public class SvUser {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long UserId;
-    private String Name;
-    private String Username;
-    private String Password;
+    @SequenceGenerator(
+            name = "UserIdGenerator",
+            allocationSize = 1,
+            sequenceName = "UserIdGenerator"
+    )
+    @GeneratedValue(
+            generator = "UserIdGenerator",
+            strategy= GenerationType.SEQUENCE)
+    private Long userId;
+    private String name;
+    private String username;
+    private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(	name = "user_roles",
