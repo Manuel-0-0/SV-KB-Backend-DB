@@ -1,22 +1,24 @@
 package com.SVKB.BackendApp.model;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@Setter
+@ToString
+@Getter
+@Entity
 public class SvUser {
 
     @Id
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer UserId;
     private String Name;
-    private String username;
-    private String password;
+    private String Username;
+    private String Password;
 }

@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SvUserRepo extends JpaRepository<SvUser,Long> {
+
+    public SvUser findByUsername(String username);
 }
