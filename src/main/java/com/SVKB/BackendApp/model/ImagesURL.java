@@ -1,15 +1,22 @@
 package com.SVKB.BackendApp.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
+@Entity
+@Data
 public class ImagesURL {
 
+    @Id
+    @SequenceGenerator(
+            name = "ImgIdGenerator",
+            allocationSize = 1,
+            sequenceName = "ImgIdGenerator"
+    )
+    @GeneratedValue(
+            generator = "ImgIdGenerator",
+            strategy= GenerationType.SEQUENCE)
     private Long Id;
     private String ImgURL;
 }

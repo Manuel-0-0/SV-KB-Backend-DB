@@ -35,7 +35,8 @@ public class CategoryModel {
     private String categoryName;
     private Integer articleNum;
 
-
+//    @OneToMany(mappedBy = "categoryArticles")
+//    private Set<ArticleModel> articles;
 
 
     public CategoryModel(String categoryName, Integer articleNum) {

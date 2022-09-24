@@ -89,7 +89,13 @@ public class ArticleService {
     public ArticleModel MapFromDtoArticleModel(ArticleModelDto articleModelDto){
         ArticleModel newArticle= new ArticleModel();
         newArticle.setContent(articleModelDto.getContent());
-//        newArticle.setImagesList(articleModelDto.getImages());
+//
+//        for (:
+//             ) {
+//
+//        }
+        
+        newArticle.setImagesList(articleModelDto.getImages());
         newArticle.setDateCreated(LocalDateTime.now());
         newArticle.setTitle(articleModelDto.getTitle());
         CategoryModel categoryModelID=categoryRepo.findById(articleModelDto.getCategoryId()).orElse(null);
