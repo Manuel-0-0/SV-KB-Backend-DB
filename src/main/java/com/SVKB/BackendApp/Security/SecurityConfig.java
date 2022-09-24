@@ -13,15 +13,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().and()
-                .cors().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .antMatcher("/**")
+                .cors().and().csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http
                 .authorizeRequests()
-                .antMatchers("/api/v1/**").permitAll()
-                .anyRequest().authenticated();
-
+                .antMatchers("/api/v/**").permitAll()
+                .anyRequest()
+                .authenticated();
     }
 
 
