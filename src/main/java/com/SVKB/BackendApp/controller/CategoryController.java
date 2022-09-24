@@ -28,6 +28,7 @@ public class CategoryController {
 
     }
 
+    @CrossOrigin
     @GetMapping(path = "/AllCategories")
     public List<CategoryModel> AllPosts(){
         return categoryService.getAllTheCategories();
