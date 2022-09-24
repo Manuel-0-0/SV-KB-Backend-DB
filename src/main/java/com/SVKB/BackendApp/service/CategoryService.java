@@ -40,10 +40,11 @@ public class CategoryService {
 
         public ResponseEntity<?> DeleteCategory(Long Id){
         List<ArticleModel> articles= articleRepo.articlesByCategories(Id);
-        categoryRepo.deleteById(Id);
             for (ArticleModel article:articles) {
+                article.setCategoryArticles(null);
                 articleRepo.deleteById(article.getId());
             }
+            categoryRepo.deleteById(Id);
             return ResponseEntity.ok().body("Deleted!");
         }
 
