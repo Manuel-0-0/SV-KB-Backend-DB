@@ -20,4 +20,5 @@ public class ArticleModelDto{
     private final String content;
     private final Set<ImagesURL> images;
     private final Long CategoryId;
+    private final Boolean draftStatus;
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +25,7 @@ public class ArticleService {
     @Autowired
     CategoryRepo categoryRepo;
 
+    DateTimeFormatter formatter =DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     @Transactional
     public ResponseEntity<?> createArticle(ArticleModelDto articleModelDto){
         ArticleModel articleModel=MapFromDtoArticleModel(articleModelDto);
@@ -39,7 +41,8 @@ public class ArticleService {
 
     public ResponseEntity<?> oneArticle(Long Id){
         if(articleRepo.existsById(Id)){
-        return ResponseEntity.ok(articleRepo.findById(Id));
+            ArticleModel articleModel=articleRepo.findById(Id).get();
+        return ResponseEntity.ok(articleModel);
     }else{
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Article can't be found.");
         }
@@ -77,7 +80,7 @@ public class ArticleService {
             ArticleModel articleModel =articleRepo.findById(Id).get();
             articleModel.setContent(articleModelDto.getContent());
             articleModel.setTitle(articleModelDto.getTitle());
-            articleModel.setDateUpdated(LocalDateTime.now());
+            articleModel.setDateUpdated(LocalDateTime.now().format(formatter));
             articleRepo.save(articleModel);
             return ResponseEntity.status(200).body(articleRepo.findById(Id)+" Updated");
         }else{
@@ -89,14 +92,9 @@ public class ArticleService {
     public ArticleModel MapFromDtoArticleModel(ArticleModelDto articleModelDto){
         ArticleModel newArticle= new ArticleModel();
         newArticle.setContent(articleModelDto.getContent());
-//
-//        for (:
-//             ) {
-//
-//        }
-        
+        newArticle.setDraftStatus(articleModelDto.getDraftStatus());
         newArticle.setImagesList(articleModelDto.getImages());
-        newArticle.setDateCreated(LocalDateTime.now());
+        newArticle.setDateCreated(LocalDateTime.now().format(formatter));
         newArticle.setTitle(articleModelDto.getTitle());
         CategoryModel categoryModelID=categoryRepo.findById(articleModelDto.getCategoryId()).orElse(null);
 

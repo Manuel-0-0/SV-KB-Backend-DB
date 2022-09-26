@@ -34,18 +34,26 @@ public class ArticleModel {
     private Long Id;
     @Column(name = "title")
     private String title;
+
+    @Lob
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
+
+
+    private Boolean DraftStatus;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "Img_Id")
     @JsonBackReference
     private Set<ImagesURL> imagesList;
-    private LocalDateTime DateCreated;
-    private LocalDateTime DateUpdated;
+
+    private String DateCreated;
+    private String DateUpdated;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Category_Id")
     @JsonBackReference
     private CategoryModel categoryArticles;
+
 
 }
