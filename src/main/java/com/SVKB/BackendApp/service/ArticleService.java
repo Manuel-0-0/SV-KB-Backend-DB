@@ -70,6 +70,7 @@ public class ArticleService {
         }
     }
 
+    @Transactional
     public ResponseEntity<?> ArticlesByCategories(Long CategoryId){
         List<ArticleModel> results= articleRepo.articlesByCategories(CategoryId);
         return ResponseEntity.status(HttpStatus.OK).body(results);
