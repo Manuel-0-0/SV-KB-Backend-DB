@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,9 +32,7 @@ public class ApplicationUser implements UserDetails {
     }
 
     public static ApplicationUser build(SvUser svUser){
-        List<GrantedAuthority> authorities = svUser.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
-                .collect(Collectors.toList());
+        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(svUser.getRoles().getName().name()));
         return new ApplicationUser(
                 svUser.getUserId(),
                 svUser.getUsername(),
@@ -41,8 +40,13 @@ public class ApplicationUser implements UserDetails {
                 authorities);
     }
 
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
+    }
+
+    public Long getId() {
+        return Id;
     }
 
     @Override

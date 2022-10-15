@@ -9,6 +9,6 @@ import java.util.Set;
 public class SvUserDTO {
     private String name;
     private String username;
-    private String Password;
-    private Set<Role> roles;
+    private String password;
+    private String roles;
 }
