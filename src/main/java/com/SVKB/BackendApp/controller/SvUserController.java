@@ -1,6 +1,7 @@
 package com.SVKB.BackendApp.controller;
 
 import com.SVKB.BackendApp.Auth.ApplicationUser;
+import com.SVKB.BackendApp.DTOs.LoginRequest;
 import com.SVKB.BackendApp.DTOs.SvUserDTO;
 import com.SVKB.BackendApp.service.SvUserService;
 import lombok.AllArgsConstructor;
@@ -24,5 +25,11 @@ public class SvUserController {
     public ResponseEntity<?> CreateUser(@RequestBody SvUserDTO svUserDto){
         log.info(String.valueOf(svUserDto));
         return svUserService.CreateUser(svUserDto);
+    }
+
+    @PostMapping(path = "/login")
+    public ResponseEntity<?> CreateUser(@RequestBody LoginRequest loginRequest){
+        log.info(String.valueOf(loginRequest));
+        return svUserService.loginSvUser(loginRequest);
     }
 }
