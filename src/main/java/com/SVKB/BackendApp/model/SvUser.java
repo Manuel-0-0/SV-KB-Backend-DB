@@ -1,5 +1,6 @@
 package com.SVKB.BackendApp.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 
@@ -31,10 +32,11 @@ public class SvUser {
     private String username;
     private String password;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "svUser", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private Set<ArticleModel> articles;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(ALL)
-//    @JoinTable(	name = "user_roles",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Role roles;
 }

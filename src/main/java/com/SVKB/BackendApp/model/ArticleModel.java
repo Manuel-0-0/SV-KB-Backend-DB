@@ -1,14 +1,14 @@
 package com.SVKB.BackendApp.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
 
 
 @Entity
@@ -17,8 +17,6 @@ import java.util.Set;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@EqualsAndHashCode
-@ToString
 @Table(name = "tbl_article")
 public class ArticleModel {
 
@@ -42,18 +40,28 @@ public class ArticleModel {
 
     private Boolean DraftStatus;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Img_Id")
-    @JsonBackReference
-    private Set<ImagesURL> imagesList;
-
     private String DateCreated;
+
     private String DateUpdated;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Category_Id")
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "Category_Id", nullable = false)
     @JsonBackReference
-    private CategoryModel categoryArticles;
+    private CategoryModel category;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SvUser_Id")
+    @JsonIgnore
+    private SvUser svUser;
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "Id = " + Id + ", " +
+                "title = " + title + ", " +
+                "content = " + content + ", " +
+                "DraftStatus = " + DraftStatus + ", " +
+                "DateCreated = " + DateCreated + ", " +
+                "DateUpdated = " + DateUpdated + ")";
+    }
 }

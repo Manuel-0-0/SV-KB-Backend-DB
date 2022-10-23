@@ -29,7 +29,7 @@ public class ArticleController {
 
     @GetMapping(path = "/All")
     public ResponseEntity<?> AllArticles(){
-        return ResponseEntity.ok(articleRepo.findAll());
+        return articleService.AllArticles();
     }
 
     @DeleteMapping(path = "/Delete/{Id}")

@@ -1,21 +1,31 @@
 package com.SVKB.BackendApp.service;
 
+import com.SVKB.BackendApp.Auth.ApplicationUser;
+import com.SVKB.BackendApp.Auth.ApplicationUserService;
 import com.SVKB.BackendApp.DTOs.ArticleModelDto;
+import com.SVKB.BackendApp.Security.JwtUtils;
 import com.SVKB.BackendApp.model.ArticleModel;
 import com.SVKB.BackendApp.model.CategoryModel;
+import com.SVKB.BackendApp.model.SvUser;
 import com.SVKB.BackendApp.repo.ArticleRepo;
 import com.SVKB.BackendApp.repo.CategoryRepo;
+import com.SVKB.BackendApp.repo.SvUserRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -25,6 +35,8 @@ public class ArticleService {
     @Autowired
     CategoryRepo categoryRepo;
 
+    @Autowired
+    private SvUserRepo svUserRepo;
     DateTimeFormatter formatter =DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     @Transactional
@@ -43,12 +55,40 @@ public class ArticleService {
     public ResponseEntity<?> oneArticle(Long Id){
         if(articleRepo.existsById(Id)){
             ArticleModel articleModel=articleRepo.findById(Id).get();
-        return ResponseEntity.ok(articleModel);
+
+            CategoryModel artCategory = articleModel.getCategory();
+            SvUser user= articleModel.getSvUser();
+
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("Article", articleModel);
+            map.put("category_name", artCategory.getCategoryName());
+            map.put("category_id", artCategory.getId());
+            map.put("user_id",user.getUserId());
+            map.put("user_name",user.getName());
+        return ResponseEntity.ok(map);
     }else{
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Article can't be found.");
         }
     }
 
+    public ResponseEntity<?> AllArticles(){
+        List<ArticleModel> all=articleRepo.findAll();
+
+        HashSet<Object> Articles= new HashSet<Object>() ;
+        for (ArticleModel one:all) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            CategoryModel artCategory = one.getCategory();
+            SvUser user= one.getSvUser();
+
+            map.put("Article", one);
+            map.put("category_name", artCategory.getCategoryName());
+            map.put("category_id", artCategory.getId());
+            map.put("user_id",user.getUserId());
+            map.put("user_name",user.getName());
+            Articles.add(map);
+        }
+        return ResponseEntity.ok().body(Articles);
+    }
     public ResponseEntity<?> searchArticles(String keyword){
         List<ArticleModel> results= articleRepo.findBySearch(keyword);
         if(results==null){
@@ -60,8 +100,8 @@ public class ArticleService {
     public ResponseEntity<?> DeleteArticle(Long Id){
         if(articleRepo.findById(Id).isPresent()){
             ArticleModel articleModel= articleRepo.findById(Id).get();
-            categoryRepo.backdateArticleNum(articleModel.getCategoryArticles().getId());
-            articleModel.setCategoryArticles(null);
+            categoryRepo.backdateArticleNum(articleModel.getCategory().getId());
+            articleModel.setCategory(null);
 
             articleRepo.deleteById(Id);
             return ResponseEntity.ok("Deleted!");
@@ -95,18 +135,25 @@ public class ArticleService {
         ArticleModel newArticle= new ArticleModel();
         newArticle.setContent(articleModelDto.getContent());
         newArticle.setDraftStatus(articleModelDto.getDraftStatus());
-        newArticle.setImagesList(articleModelDto.getImages());
         newArticle.setDateCreated(LocalDateTime.now().format(formatter));
+
         newArticle.setTitle(articleModelDto.getTitle());
         CategoryModel categoryModelID=categoryRepo.findById(articleModelDto.getCategoryId()).orElse(null);
 
-        newArticle.setCategoryArticles(categoryModelID);
-
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String usrname=auth.getName();
+        log.info("username :"+ usrname);
+        SvUser svuser=svUserRepo.findByUsername(usrname);
+        log.info("svuser :" +svuser.toString());
+        newArticle.setCategory(categoryModelID);
+        newArticle.setSvUser(svuser);
         log.info("new article: "+newArticle);
 
 
         return  newArticle;
 
     }
+
+
 
 }

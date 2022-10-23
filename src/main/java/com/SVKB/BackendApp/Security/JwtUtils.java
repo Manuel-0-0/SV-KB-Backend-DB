@@ -1,14 +1,12 @@
 package com.SVKB.BackendApp.Security;
 
 import com.SVKB.BackendApp.Auth.ApplicationUser;
-import com.auth0.jwt.algorithms.Algorithm;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.UUID;
 
@@ -21,8 +19,7 @@ public class JwtUtils {
     @Value("${app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
-//    @Value("${app.cookieName}")
-//    private String jwtCookie;
+
 
     private String tokenSignature;
 
@@ -30,7 +27,6 @@ public class JwtUtils {
     public String generateTokenFromUsername(ApplicationUser user) {
 
 
-//        Algorithm algorithm = Algorithm.HMAC256(jwtSecret.getBytes());
         String Token= Jwts.builder()
                 .setId(UUID.randomUUID().toString())
                 .setHeaderParam("typ","JWT")
@@ -42,15 +38,7 @@ public class JwtUtils {
                 .signWith(SignatureAlgorithm.HS512, jwtSecret.getBytes())
                 .compact();
 
-        // split token...
-//        String[] tokenParts = Token.split("\\.");
-//        String tokenHeader = tokenParts[0];
-//        String tokenPayload = tokenParts[1];
-//        String tokenSignature = tokenParts[2];
-//        String frontendToken = tokenHeader + "." + tokenPayload;
-
         setTokenSignature(Token);
-
         return Token;
     }
 
@@ -74,21 +62,6 @@ public class JwtUtils {
         }
     }
 
-//    public ResponseCookie generateJwtCookie() {
-//        String jwt = getTokenSignature();
-//
-//        ResponseCookie cookie = ResponseCookie.from(jwtCookie, jwt).path("/admin")
-//                .maxAge(24 * 60 * 60).httpOnly(true).build();
-//
-//        return cookie;
-//    }
-
-//    public ResponseCookie getCleanJwtCookie() {
-//        ResponseCookie cookie = ResponseCookie.from(jwtCookie, null).path("/api").build();
-//        return cookie;
-//    }
-
-    // get the email from the generated token for authentication (SecurityContextHolder) purposes ...
     public String getusername(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(jwtSecret.getBytes())
@@ -98,15 +71,10 @@ public class JwtUtils {
         return claims.getSubject();
     }
 
-    // validate the token, return true if authentic : false otherwise ...
     public boolean validateJwtToken(String authToken) {
         try {
 
             Jwts.parser().setSigningKey(jwtSecret.getBytes()).parseClaimsJws(authToken).getBody();
-
-            log.info(authToken);
-//            log.info( Jwts.parser().setSigningKey(jwtSecret.getBytes()).parseClaimsJws(authToken).getBody());
-
             return true;
         } catch (SignatureException e) {
             log.error("Invalid JWT signature: {}", e.getMessage());
