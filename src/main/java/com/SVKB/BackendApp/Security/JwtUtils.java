@@ -1,12 +1,14 @@
 package com.SVKB.BackendApp.Security;
 
 import com.SVKB.BackendApp.Auth.ApplicationUser;
+import com.auth0.jwt.algorithms.Algorithm;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.UUID;
 
@@ -28,13 +30,16 @@ public class JwtUtils {
     public String generateTokenFromUsername(ApplicationUser user) {
 
 
+//        Algorithm algorithm = Algorithm.HMAC256(jwtSecret.getBytes());
         String Token= Jwts.builder()
                 .setId(UUID.randomUUID().toString())
+                .setHeaderParam("typ","JWT")
+                .setHeaderParam("alg","HS512")
                 .setSubject(user.getUsername())
                 .claim("authorities", user.getAuthorities())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .signWith(SignatureAlgorithm.HS512, jwtSecret.getBytes())
                 .compact();
 
         // split token...
@@ -86,7 +91,7 @@ public class JwtUtils {
     // get the email from the generated token for authentication (SecurityContextHolder) purposes ...
     public String getusername(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
+                .setSigningKey(jwtSecret.getBytes())
                 .parseClaimsJws(token)
                 .getBody();
 
@@ -96,7 +101,12 @@ public class JwtUtils {
     // validate the token, return true if authentic : false otherwise ...
     public boolean validateJwtToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
+
+            Jwts.parser().setSigningKey(jwtSecret.getBytes()).parseClaimsJws(authToken).getBody();
+
+            log.info(authToken);
+//            log.info( Jwts.parser().setSigningKey(jwtSecret.getBytes()).parseClaimsJws(authToken).getBody());
+
             return true;
         } catch (SignatureException e) {
             log.error("Invalid JWT signature: {}", e.getMessage());

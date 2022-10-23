@@ -26,6 +26,7 @@ public class ArticleService {
     CategoryRepo categoryRepo;
 
     DateTimeFormatter formatter =DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
     @Transactional
     public ResponseEntity<?> createArticle(ArticleModelDto articleModelDto){
         ArticleModel articleModel=MapFromDtoArticleModel(articleModelDto);
@@ -34,7 +35,7 @@ public class ArticleService {
             categoryRepo.updateArticleNum(articleModelDto.getCategoryId());
             return ResponseEntity.ok(articleModel+"new Article added!");
         }else {
-            return (ResponseEntity<?>) ResponseEntity.badRequest();
+            return ResponseEntity.badRequest().body("something off");
         }
 
     }
@@ -102,9 +103,7 @@ public class ArticleService {
         newArticle.setCategoryArticles(categoryModelID);
 
         log.info("new article: "+newArticle);
-        log.info("target category: "+ categoryRepo.findById(categoryModelID.getId()));
-        log.info("stored category: "+ categoryModelID);
-        log.info("new article category: " + newArticle.getCategoryArticles());
+
 
         return  newArticle;
 

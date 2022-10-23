@@ -1,5 +1,6 @@
 package com.SVKB.BackendApp.Security;
 
+import com.SVKB.BackendApp.Auth.ApplicationUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,9 +17,13 @@ public class  SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private UnAuthEntryPoint unAuthEntryPoint;
 
+    private ApplicationUserService applicationUserService;
+
+    private JwtUtils jwtUtils;
+
     @Bean
-    public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter();
+    public AuthTokenFilter authenticationJwtTokenFilter(JwtUtils jwtUtils, ApplicationUserService applicationUserService) {
+        return new AuthTokenFilter(jwtUtils,applicationUserService);
     }
 
     @Override
@@ -30,12 +35,14 @@ public class  SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http
                 .authorizeRequests()
-                .antMatchers("/api/v1/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
+                .antMatchers("/api/v1/articles/All").permitAll()
+                .antMatchers("/api/v1/category/**").permitAll()
+                .antMatchers("/api/v1/articles/**").hasAuthority("ROLE_IT_ADMIN")
                 .anyRequest()
                 .authenticated();
 
-        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(authenticationJwtTokenFilter(jwtUtils,applicationUserService), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
