@@ -49,7 +49,7 @@ public class ArticleController {
 
     @GetMapping(path = "/")
     public ResponseEntity<?> SearchByCategories(@RequestParam Long CategoryId){
-        return articleService.AllArticles();
+        return articleService.ArticlesByCategories(CategoryId);
     }
 
     @PutMapping(path ="/Update/{Id}")
