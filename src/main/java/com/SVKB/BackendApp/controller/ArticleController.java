@@ -52,6 +52,10 @@ public class ArticleController {
         return articleService.ArticlesByCategories(CategoryId);
     }
 
+    @GetMapping(path = "/test/")
+    public ResponseEntity<?> test(@RequestParam Long id){
+        return articleService.testes(id);
+    }
     @PutMapping(path ="/Update/{Id}")
     public ResponseEntity<?> UpdateArticles(@PathVariable Long Id, @RequestBody ArticleModelDto articleModelDto){
         return articleService.UpdateArticle(Id,articleModelDto);

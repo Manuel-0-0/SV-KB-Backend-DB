@@ -114,6 +114,11 @@ public class ArticleService {
         return ResponseEntity.status(HttpStatus.OK).body(results);
     }
 
+    public ResponseEntity<?> testes(Long Id){
+        List<ArticleModel> res=articleRepo.articlesByCategories(Id);
+        return ResponseEntity.ok().body(res);
+    }
+
     public ResponseEntity<?> UpdateArticle(Long Id, ArticleModelDto articleModelDto){
         if(articleRepo.existsById(Id)){
             ArticleModel articleModel =articleRepo.findById(Id).get();
