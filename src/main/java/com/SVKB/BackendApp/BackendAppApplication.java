@@ -30,7 +30,7 @@ public class BackendAppApplication {
 	@Bean
 	CommandLineRunner createDefaultUser(SvUserService svUserService) {
 
-		if (!repo.existsByUsername("Adminstrator")) {
+		if (!repo.existsByUsername("Administrator")) {
 			SvUserDTO svUser = new SvUserDTO("IT_Default", "Administrator", "ValleDelSol9150", "ROLE_IT_ADMIN");
 
 			return args -> {
