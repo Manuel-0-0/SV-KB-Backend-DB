@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.awt.print.Pageable;
 import java.util.List;
 
 @Repository
@@ -24,5 +25,7 @@ public interface ArticleRepo extends JpaRepository<ArticleModel,Long> {
     @Query(value = "SELECT * FROM tbl_article p WHERE Category_Id=:CategoryId",
     nativeQuery = true)
     List<ArticleModel> articlesByCategories(Long CategoryId);
+
+    List<ArticleModel> findAll();
 
 }

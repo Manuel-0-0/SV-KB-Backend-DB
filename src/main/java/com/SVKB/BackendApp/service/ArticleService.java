@@ -1,9 +1,6 @@
 package com.SVKB.BackendApp.service;
 
-import com.SVKB.BackendApp.Auth.ApplicationUser;
-import com.SVKB.BackendApp.Auth.ApplicationUserService;
 import com.SVKB.BackendApp.DTOs.ArticleModelDto;
-import com.SVKB.BackendApp.Security.JwtUtils;
 import com.SVKB.BackendApp.model.ArticleModel;
 import com.SVKB.BackendApp.model.CategoryModel;
 import com.SVKB.BackendApp.model.SvUser;
@@ -12,17 +9,15 @@ import com.SVKB.BackendApp.repo.CategoryRepo;
 import com.SVKB.BackendApp.repo.SvUserRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
-import org.springframework.http.HttpHeaders;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -72,6 +67,7 @@ public class ArticleService {
     }
 
     public ResponseEntity<?> AllArticles(){
+//        Pageable pageable = (Pageable) PageRequest.of(page,size);
         List<ArticleModel> all=articleRepo.findAll();
 
         HashSet<Object> Articles= new HashSet<Object>() ;
@@ -87,6 +83,7 @@ public class ArticleService {
             map.put("user_name",user.getName());
             Articles.add(map);
         }
+
         return ResponseEntity.ok().body(Articles);
     }
     public ResponseEntity<?> searchArticles(String keyword){
