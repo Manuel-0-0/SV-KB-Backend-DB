@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -78,9 +79,11 @@ public class SvUserService{
             List<String> roles = appUser.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList());
-
+            HashMap<String, Object> res = new HashMap<>();
+            res.put("Authorization", token);
+            res.put("Message","login successful");
             return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token)
-                    .body("login successful!");
+                    .body( res);
         } catch (ResponseStatusException e) {
             throw new ResponseStatusException(HttpStatus.valueOf(e.toString()));
         }
