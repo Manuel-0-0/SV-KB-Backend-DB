@@ -29,6 +29,7 @@ public class ArticleController {
     @PostMapping(path = "/NewArticle")
     public ResponseEntity<?> CreateNewArticles(@RequestBody ArticleModelDto articleModelDto){
         articleService.createArticle(articleModelDto);
+        log.info(articleModelDto.toString());
         return ResponseEntity.ok(articleModelDto.getTitle().toUpperCase(Locale.ROOT)+" Created");
     }
 
