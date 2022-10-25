@@ -80,10 +80,11 @@ public class SvUserService{
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList());
             HashMap<String, Object> res = new HashMap<>();
-            res.put("Authorization", token);
+            res.put("Token", token);
             res.put("Message","login successful");
+            res.put("User",appUser);
             return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token)
-                    .body( res);
+                    .body(res);
         } catch (ResponseStatusException e) {
             throw new ResponseStatusException(HttpStatus.valueOf(e.toString()));
         }

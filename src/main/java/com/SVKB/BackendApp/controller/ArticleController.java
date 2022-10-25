@@ -3,8 +3,10 @@ package com.SVKB.BackendApp.controller;
 import com.SVKB.BackendApp.DTOs.ArticleModelDto;
 import com.SVKB.BackendApp.model.ArticleModel;
 import com.SVKB.BackendApp.repo.ArticleRepo;
+import com.SVKB.BackendApp.repo.SvUserRepo;
 import com.SVKB.BackendApp.service.ArticleService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.parser.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,9 @@ public class ArticleController {
     ArticleService articleService;
     @Autowired
     ArticleRepo articleRepo;
+
+    @Autowired
+    SvUserRepo svUserRepo;
 
     @PostMapping(path = "/NewArticle")
     public ResponseEntity<?> CreateNewArticles(@RequestBody ArticleModelDto articleModelDto){
@@ -47,7 +52,7 @@ public class ArticleController {
         return articleService.oneArticle(Id);
     }
 
-    @GetMapping(path = "/")
+    @GetMapping(path = "/" ,params = "CategoryId")
     public ResponseEntity<?> SearchByCategories(@RequestParam Long CategoryId){
         return articleService.ArticlesByCategories(CategoryId);
     }
@@ -61,4 +66,13 @@ public class ArticleController {
         return articleService.UpdateArticle(Id,articleModelDto);
     }
 
+    @GetMapping(path ="/user/{id}")
+    public ResponseEntity<?> UserArticles(@PathVariable Long id){
+        return articleService.articleByUsr(id);
+    }
+
+    @GetMapping(path="/", params = "draft_status")
+    public ResponseEntity<?> draftStatus(@RequestParam String draft_status){
+        return articleService.DraftStatus(draft_status);
+    }
 }

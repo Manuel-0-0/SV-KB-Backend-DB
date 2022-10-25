@@ -8,6 +8,7 @@ import com.SVKB.BackendApp.repo.ArticleRepo;
 import com.SVKB.BackendApp.repo.CategoryRepo;
 import com.SVKB.BackendApp.repo.SvUserRepo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,7 @@ public class ArticleService {
     private SvUserRepo svUserRepo;
     DateTimeFormatter formatter =DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
+    //create new article
     @Transactional
     public ResponseEntity<?> createArticle(ArticleModelDto articleModelDto){
         ArticleModel articleModel=MapFromDtoArticleModel(articleModelDto);
@@ -47,6 +49,8 @@ public class ArticleService {
 
     }
 
+
+    //fine a single article by using Id
     public ResponseEntity<?> oneArticle(Long Id){
         if(articleRepo.existsById(Id)){
             ArticleModel articleModel=articleRepo.findById(Id).get();
@@ -66,6 +70,8 @@ public class ArticleService {
         }
     }
 
+
+    //find all articles
     public ResponseEntity<?> AllArticles(){
 //        Pageable pageable = (Pageable) PageRequest.of(page,size);
         List<ArticleModel> all=articleRepo.findAll();
@@ -86,6 +92,9 @@ public class ArticleService {
 
         return ResponseEntity.ok().body(Articles);
     }
+
+
+    //search for all articles using a keyword
     public ResponseEntity<?> searchArticles(String keyword){
         List<ArticleModel> results= articleRepo.findBySearch(keyword);
         if(results==null){
@@ -94,6 +103,8 @@ public class ArticleService {
             return ResponseEntity.ok().body(results);
         }
     }
+
+    //delete one article by Id
     public ResponseEntity<?> DeleteArticle(Long Id){
         if(articleRepo.findById(Id).isPresent()){
             ArticleModel articleModel= articleRepo.findById(Id).get();
@@ -108,17 +119,42 @@ public class ArticleService {
         }
     }
 
+    //find articles by based on category
     @Transactional
     public ResponseEntity<?> ArticlesByCategories(Long CategoryId){
         List<ArticleModel> results= articleRepo.articlesByCategories(CategoryId);
-        return ResponseEntity.status(HttpStatus.OK).body(results.toArray());
+        return ResponseEntity.status(HttpStatus.OK).body(results);
+
     }
 
+
+    //test method
     public ResponseEntity<?> testes(Long Id){
         List<ArticleModel> res=articleRepo.articlesByCategories(Id);
         return ResponseEntity.ok().body(res);
     }
 
+    //find articles by based on the user that created it
+    public ResponseEntity<?> articleByUsr(Long id){
+        if(svUserRepo.existsById(id)){
+            return ResponseEntity.ok().body(articleRepo.findArticleModelByUser(id));
+        }else{
+            return ResponseEntity.badRequest().body("No User Found");
+        }
+    }
+
+    // find articles by based on draft status
+    public ResponseEntity<?> DraftStatus(String status){
+        if(status.equalsIgnoreCase("true")){
+            return ResponseEntity.ok().body(articleRepo.findArticleModelByDraftStatusIsTrue());
+        }else if(status.equalsIgnoreCase("false")){
+            return ResponseEntity.ok().body(articleRepo.findArticleModelByDraftStatusIsFalse());
+        }else{
+            return ResponseEntity.badRequest().body("Invalid DraftStatus");
+        }
+    }
+
+    //Update an article using the id and dto
     public ResponseEntity<?> UpdateArticle(Long Id, ArticleModelDto articleModelDto){
         if(articleRepo.existsById(Id)){
             ArticleModel articleModel =articleRepo.findById(Id).get();

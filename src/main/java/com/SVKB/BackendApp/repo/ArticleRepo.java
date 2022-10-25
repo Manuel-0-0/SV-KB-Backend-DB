@@ -26,6 +26,21 @@ public interface ArticleRepo extends JpaRepository<ArticleModel,Long> {
     nativeQuery = true)
     List<ArticleModel> articlesByCategories(Long CategoryId);
 
+    @Query("select a from ArticleModel a")
     List<ArticleModel> findAll();
 
+    @Transactional
+    @Query(value = "SELECT * FROM tbl_article p WHERE draft_status='true'",
+            nativeQuery = true)
+    List<ArticleModel> findArticleModelByDraftStatusIsTrue();
+
+    @Transactional
+    @Query(value = "SELECT * FROM tbl_article p WHERE draft_status='false'",
+            nativeQuery = true)
+    List<ArticleModel> findArticleModelByDraftStatusIsFalse();
+
+    @Transactional
+    @Query(value = "SELECT * FROM tbl_article p WHERE sv_user_id=:Id",
+    nativeQuery = true)
+    List<ArticleModel> findArticleModelByUser(Long Id);
 }
