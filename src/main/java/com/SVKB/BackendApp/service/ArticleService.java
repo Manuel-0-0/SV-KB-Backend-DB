@@ -137,7 +137,21 @@ public class ArticleService {
     //find articles by based on the user that created it
     public ResponseEntity<?> articleByUsr(Long id){
         if(svUserRepo.existsById(id)){
-            return ResponseEntity.ok().body(articleRepo.findArticleModelByUser(id));
+            List<ArticleModel> all= articleRepo.findArticleModelByUser(id);
+            HashSet<Object> Articles= new HashSet<Object>() ;
+            for (ArticleModel one:all) {
+                Map<String, Object> map = new HashMap<String, Object>();
+                CategoryModel artCategory = one.getCategory();
+                SvUser user= one.getSvUser();
+
+                map.put("Article", one);
+                map.put("category_name", artCategory.getCategoryName());
+                map.put("category_id", artCategory.getId());
+                map.put("user_id",user.getUserId());
+                map.put("user_name",user.getName());
+                Articles.add(map);
+            }
+            return ResponseEntity.ok().body(Articles);
         }else{
             return ResponseEntity.badRequest().body("No User Found");
         }
