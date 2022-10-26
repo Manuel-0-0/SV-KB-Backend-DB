@@ -99,14 +99,14 @@ public class ArticleService {
     @Transactional
     public ResponseEntity<?> searchArticles(String keyword){
         List<ArticleModel> all= articleRepo.findBySearch(keyword);
-        Map<String, Object> map = new HashMap<String, Object>();
+
         if(all==null){
             return ResponseEntity.ok().body("no results found!");
-        }else {
+        }
 
-            HashSet<Object> Articles= new HashSet<Object>() ;
+            HashSet<Object> articles= new HashSet<Object>() ;
             for (ArticleModel one:all) {
-
+                Map<String, Object> map = new HashMap<String, Object>();
                 CategoryModel artCategory = one.getCategory();
                 SvUser user = one.getSvUser();
 
@@ -115,12 +115,12 @@ public class ArticleService {
                 map.put("category_id", artCategory.getId());
                 map.put("user_id", user.getUserId());
                 map.put("user_name", user.getName());
-                Articles.add(map);
+                articles.add(map);
 
             }
-            return ResponseEntity.ok().body(map);
+            return ResponseEntity.ok().body(articles);
         }
-    }
+
 
     //delete one article by Id
     public ResponseEntity<?> DeleteArticle(Long Id){
