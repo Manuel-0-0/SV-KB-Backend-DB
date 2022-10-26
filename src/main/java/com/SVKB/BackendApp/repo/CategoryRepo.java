@@ -1,5 +1,6 @@
 package com.SVKB.BackendApp.repo;
 
+import com.SVKB.BackendApp.model.ArticleModel;
 import com.SVKB.BackendApp.model.CategoryModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -48,4 +49,10 @@ public interface CategoryRepo extends JpaRepository<CategoryModel, Long> {
     )
     void UpdateCategoryName(@Param("Id") Long Id, @Param("categoryname") String categoryName);
 
+    @Transactional
+    @Query(
+            value = "SELECT * FROM tbl_category t WHERE t.category_name LIKE %?1%",
+            nativeQuery = true
+    )
+    List<CategoryModel> findCategoryModelByCategoryName(String title);
 }

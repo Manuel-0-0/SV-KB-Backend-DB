@@ -52,4 +52,8 @@ public class CategoryController {
         return categoryService.DeleteCategory(Id);
     }
 
+    @GetMapping(path="/Search")
+    public ResponseEntity<?> SearchCategories(@RequestParam String keyword){
+        return categoryService.categoryByName(keyword);
+    }
 }

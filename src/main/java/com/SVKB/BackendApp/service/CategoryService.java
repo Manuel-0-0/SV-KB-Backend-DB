@@ -38,6 +38,16 @@ public class CategoryService {
         }
         }
 
+        public ResponseEntity<?> categoryByName(String name){
+        List<CategoryModel> categories = categoryRepo.findCategoryModelByCategoryName(name);
+        if(!(categories ==null)){
+            return ResponseEntity.ok().body(categories);
+        }else{
+            return ResponseEntity.ok("no articles found");
+        }
+        }
+
+
         public ResponseEntity<?> DeleteCategory(Long Id){
         List<ArticleModel> articles= articleRepo.articlesByCategories(Id);
             for (ArticleModel article:articles) {
