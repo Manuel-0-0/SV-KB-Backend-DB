@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface ArticleRepo extends JpaRepository<ArticleModel,Long> {
-
+    @Transactional
     @Query(
             value = "SELECT * FROM tbl_article t WHERE t.title LIKE %?1%",
             nativeQuery = true

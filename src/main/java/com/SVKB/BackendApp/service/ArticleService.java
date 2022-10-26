@@ -72,6 +72,7 @@ public class ArticleService {
 
 
     //find all articles
+    @Transactional
     public ResponseEntity<?> AllArticles(){
 //        Pageable pageable = (Pageable) PageRequest.of(page,size);
         List<ArticleModel> all=articleRepo.findAll();
@@ -95,6 +96,7 @@ public class ArticleService {
 
 
     //search for all articles using a keyword
+    @Transactional
     public ResponseEntity<?> searchArticles(String keyword){
         List<ArticleModel> results= articleRepo.findBySearch(keyword);
         if(results==null){
@@ -134,6 +136,7 @@ public class ArticleService {
     }
 
     //find articles by based on the user that created it
+    @Transactional
     public ResponseEntity<?> articleByUsr(Long id){
         if(svUserRepo.existsById(id)){
             List<ArticleModel> all= articleRepo.findArticleModelByUser(id);
@@ -157,6 +160,7 @@ public class ArticleService {
     }
 
     // find articles by based on draft status
+    @Transactional
     public ResponseEntity<?> DraftStatus(String status){
         if(status.equalsIgnoreCase("true")){
             return ResponseEntity.ok().body(articleRepo.findArticleModelByDraftStatusIsTrue());
