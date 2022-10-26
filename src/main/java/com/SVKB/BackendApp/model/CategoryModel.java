@@ -33,7 +33,7 @@ public class CategoryModel {
     
     private Integer articleNum;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "category", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "category")
     @JsonManagedReference
     private Set<ArticleModel> articles;
     

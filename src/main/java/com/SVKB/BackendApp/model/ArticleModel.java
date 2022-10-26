@@ -44,7 +44,7 @@ public class ArticleModel {
 
     private String DateUpdated;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "Category_Id", nullable = false)
     @JsonBackReference
     private CategoryModel category;
