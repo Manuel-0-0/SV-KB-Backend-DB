@@ -48,6 +48,11 @@ public class ArticleController {
         return articleService.searchArticles(keyword);
     }
 
+    @GetMapping(path = "/All" , params = "draftStatus")
+    public ResponseEntity<?> publishedArticles(@RequestParam String draftStatus){
+        return  articleService.DraftStatus(draftStatus);
+    }
+
     @GetMapping(path = "/{Id}")
     public ResponseEntity<?> OneArticle(@PathVariable Long Id){
         return articleService.oneArticle(Id);

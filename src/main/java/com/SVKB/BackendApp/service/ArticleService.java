@@ -77,21 +77,7 @@ public class ArticleService {
 //        Pageable pageable = (Pageable) PageRequest.of(page,size);
         List<ArticleModel> all=articleRepo.findAll();
 
-        HashSet<Object> Articles= new HashSet<Object>() ;
-        for (ArticleModel one:all) {
-            Map<String, Object> map = new HashMap<String, Object>();
-            CategoryModel artCategory = one.getCategory();
-            SvUser user= one.getSvUser();
-
-            map.put("Article", one);
-            map.put("category_name", artCategory.getCategoryName());
-            map.put("category_id", artCategory.getId());
-            map.put("user_id",user.getUserId());
-            map.put("user_name",user.getName());
-            Articles.add(map);
-        }
-
-        return ResponseEntity.ok().body(Articles);
+        return ResponseEntity.ok().body(getArticlePlus(all));
     }
 
 
@@ -100,25 +86,10 @@ public class ArticleService {
     public ResponseEntity<?> searchArticles(String keyword){
         List<ArticleModel> all= articleRepo.findBySearch(keyword);
 
-        if(all==null){
+        if(all==null) {
             return ResponseEntity.ok().body("no results found!");
         }
-
-            HashSet<Object> articles= new HashSet<Object>() ;
-            for (ArticleModel one:all) {
-                Map<String, Object> map = new HashMap<String, Object>();
-                CategoryModel artCategory = one.getCategory();
-                SvUser user = one.getSvUser();
-
-                map.put("Article", one);
-                map.put("category_name", artCategory.getCategoryName());
-                map.put("category_id", artCategory.getId());
-                map.put("user_id", user.getUserId());
-                map.put("user_name", user.getName());
-                articles.add(map);
-
-            }
-            return ResponseEntity.ok().body(articles);
+            return ResponseEntity.ok().body(getArticlePlus(all));
         }
 
 
@@ -140,7 +111,7 @@ public class ArticleService {
     @Transactional
     public ResponseEntity<?> ArticlesByCategories(Long CategoryId){
         List<ArticleModel> results= articleRepo.articlesByCategories(CategoryId);
-        return ResponseEntity.status(HttpStatus.OK).body(results);
+        return ResponseEntity.status(HttpStatus.OK).body(getArticlePlus(results));
 
     }
 
@@ -156,32 +127,38 @@ public class ArticleService {
     public ResponseEntity<?> articleByUsr(Long id){
         if(svUserRepo.existsById(id)){
             List<ArticleModel> all= articleRepo.findArticleModelByUser(id);
-            HashSet<Object> Articles= new HashSet<Object>() ;
-            for (ArticleModel one:all) {
-                Map<String, Object> map = new HashMap<String, Object>();
-                CategoryModel artCategory = one.getCategory();
-                SvUser user= one.getSvUser();
-
-                map.put("Article", one);
-                map.put("category_name", artCategory.getCategoryName());
-                map.put("category_id", artCategory.getId());
-                map.put("user_id",user.getUserId());
-                map.put("user_name",user.getName());
-                Articles.add(map);
-            }
-            return ResponseEntity.ok().body(Articles);
+            return ResponseEntity.ok().body(getArticlePlus(all));
         }else{
             return ResponseEntity.badRequest().body("No User Found");
         }
     }
 
+    private Object getArticlePlus(List<ArticleModel> all) {
+        HashSet<Object> Articles= new HashSet<Object>() ;
+        for (ArticleModel one:all) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            CategoryModel artCategory = one.getCategory();
+            SvUser user= one.getSvUser();
+
+            map.put("Article", one);
+            map.put("category_name", artCategory.getCategoryName());
+            map.put("category_id", artCategory.getId());
+            map.put("user_id",user.getUserId());
+            map.put("user_name",user.getName());
+            Articles.add(map);
+        }
+        return Articles;
+    }
+
     // find articles by based on draft status
     @Transactional
     public ResponseEntity<?> DraftStatus(String status){
+        List<ArticleModel> allTrue=articleRepo.findArticleModelByDraftStatusIsTrue();
+        List<ArticleModel> allFalse=articleRepo.findArticleModelByDraftStatusIsFalse();
         if(status.equalsIgnoreCase("true")){
-            return ResponseEntity.ok().body(articleRepo.findArticleModelByDraftStatusIsTrue());
+            return ResponseEntity.ok().body(getArticlePlus(allTrue));
         }else if(status.equalsIgnoreCase("false")){
-            return ResponseEntity.ok().body(articleRepo.findArticleModelByDraftStatusIsFalse());
+            return ResponseEntity.ok().body(getArticlePlus(allFalse));
         }else{
             return ResponseEntity.badRequest().body("Invalid DraftStatus");
         }
