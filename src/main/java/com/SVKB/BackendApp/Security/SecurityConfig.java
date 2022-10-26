@@ -39,12 +39,9 @@ public class  SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth/login").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/v1/articles/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/v1/category/**").permitAll()
-                .antMatchers("/api/v1/category/**").permitAll()
-//                .access("hasAuthority('ROLE_IT_ADMIN') or hasAuthority('ROLE_ADMIN')")
-                .antMatchers("/api/v1/articles/**").permitAll()
-//                .access("hasAuthority('ROLE_IT_ADMIN') or hasAuthority('ROLE_ADMIN')")
-                .antMatchers("/auth/signup").permitAll()
-//                .hasAuthority("ROLE_IT_ADMIN")
+                .antMatchers("/api/v1/category/**").access("hasAuthority('ROLE_IT_ADMIN') or hasAuthority('ROLE_ADMIN')")
+                .antMatchers("/api/v1/articles/**").access("hasAuthority('ROLE_IT_ADMIN') or hasAuthority('ROLE_ADMIN')")
+                .antMatchers("/auth/signup").hasAuthority("ROLE_IT_ADMIN")
                 .anyRequest()
                 .authenticated();
 

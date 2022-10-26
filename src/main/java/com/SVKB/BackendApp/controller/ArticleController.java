@@ -15,7 +15,7 @@ import java.util.Locale;
 
 @Slf4j
 @RestController
-@RequestMapping(path = "/api/v1/articles")
+@RequestMapping(path = "/api/v1/articles", produces="application/json")
 public class ArticleController {
 
     @Autowired
