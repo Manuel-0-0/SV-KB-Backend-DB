@@ -98,11 +98,27 @@ public class ArticleService {
     //search for all articles using a keyword
     @Transactional
     public ResponseEntity<?> searchArticles(String keyword){
-        List<ArticleModel> results= articleRepo.findBySearch(keyword);
-        if(results==null){
+        List<ArticleModel> all= articleRepo.findBySearch(keyword);
+        Map<String, Object> map = new HashMap<String, Object>();
+        if(all==null){
             return ResponseEntity.ok().body("no results found!");
         }else {
-            return ResponseEntity.ok().body(results);
+
+            HashSet<Object> Articles= new HashSet<Object>() ;
+            for (ArticleModel one:all) {
+
+                CategoryModel artCategory = one.getCategory();
+                SvUser user = one.getSvUser();
+
+                map.put("Article", one);
+                map.put("category_name", artCategory.getCategoryName());
+                map.put("category_id", artCategory.getId());
+                map.put("user_id", user.getUserId());
+                map.put("user_name", user.getName());
+                Articles.add(map);
+
+            }
+            return ResponseEntity.ok().body(map);
         }
     }
 
