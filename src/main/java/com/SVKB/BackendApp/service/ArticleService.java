@@ -155,9 +155,9 @@ public class ArticleService {
     public ResponseEntity<?> DraftStatus(String status){
         List<ArticleModel> allTrue=articleRepo.findArticleModelByDraftStatusIsTrue();
         List<ArticleModel> allFalse=articleRepo.findArticleModelByDraftStatusIsFalse();
-        if(status.equalsIgnoreCase("true")){
+        if(status.equalsIgnoreCase("false")){
             return ResponseEntity.ok().body(getArticlePlus(allTrue));
-        }else if(status.equalsIgnoreCase("false")){
+        }else if(status.equalsIgnoreCase("true")){
             return ResponseEntity.ok().body(getArticlePlus(allFalse));
         }else{
             return ResponseEntity.badRequest().body("Invalid DraftStatus");
