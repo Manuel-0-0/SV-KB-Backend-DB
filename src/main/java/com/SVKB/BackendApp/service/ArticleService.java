@@ -109,8 +109,6 @@ public class ArticleService {
         if(articleRepo.findById(Id).isPresent()){
             ArticleModel articleModel= articleRepo.findById(Id).get();
             categoryRepo.backdateArticleNum(articleModel.getCategory().getId());
-            articleModel.setCategory(null);
-            articleModel.setSvUser(null);
 
             articleRepo.deleteById(Id);
             return ResponseEntity.ok("Deleted!");
