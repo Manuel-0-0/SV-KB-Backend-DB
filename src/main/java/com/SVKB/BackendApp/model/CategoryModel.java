@@ -33,7 +33,7 @@ public class CategoryModel {
     
     private Integer articleNum;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "category")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
     @JsonManagedReference
     private Set<ArticleModel> articles;
     
