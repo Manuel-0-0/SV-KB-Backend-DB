@@ -1,6 +1,7 @@
 package com.SVKB.BackendApp.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
@@ -34,7 +35,7 @@ public class CategoryModel {
     private Integer articleNum;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
-    @JsonManagedReference
+    @JsonIgnore
     private Set<ArticleModel> articles;
     
     
@@ -49,7 +50,6 @@ public class CategoryModel {
                 "Id=" + Id +
                 ", categoryName='" + categoryName + '\'' +
                 ", articleNum=" + articleNum +
-                ", articles=" + articles +
                 '}';
     }
 }

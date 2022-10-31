@@ -110,6 +110,9 @@ public class ArticleService {
     //find articles by based on category
     @Transactional
     public ResponseEntity<?> ArticlesByCategories(Long CategoryId){
+        if(!categoryRepo.existsById(CategoryId)){
+            return ResponseEntity.badRequest().body("Category not found.");
+        }
         List<ArticleModel> results= articleRepo.articlesByCategories(CategoryId);
         return ResponseEntity.status(HttpStatus.OK).body(getArticlePlus(results));
 

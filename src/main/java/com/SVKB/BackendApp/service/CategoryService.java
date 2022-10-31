@@ -3,14 +3,15 @@ package com.SVKB.BackendApp.service;
 import com.SVKB.BackendApp.DTOs.CategoryModelDto;
 import com.SVKB.BackendApp.model.ArticleModel;
 import com.SVKB.BackendApp.model.CategoryModel;
+import com.SVKB.BackendApp.model.SvUser;
 import com.SVKB.BackendApp.repo.ArticleRepo;
 import com.SVKB.BackendApp.repo.CategoryRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Locale;
+import javax.transaction.Transactional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -41,9 +42,9 @@ public class CategoryService {
         public ResponseEntity<?> categoryByName(String name){
         List<CategoryModel> categories = categoryRepo.findCategoryModelByCategoryName(name);
         if(!(categories ==null)){
-            return ResponseEntity.ok().body(categories);
+            return ResponseEntity.ok().body(getcategories(categories));
         }else{
-            return ResponseEntity.ok("no articles found");
+            return ResponseEntity.ok("no categories found");
         }
         }
 
@@ -58,9 +59,13 @@ public class CategoryService {
             return ResponseEntity.ok().body("Deleted!");
         }
 
-    public List<CategoryModel> getAllTheCategories(){
-        return categoryRepo.findAll();
+
+    @Transactional
+    public ResponseEntity<?> getAllTheCategories(){
+        List<CategoryModel> categories=categoryRepo.findAllCat();
+        return ResponseEntity.ok().body(getcategories(categories));
     }
+
     public CategoryModel MapFromDtoToCategoryModel(CategoryModelDto categoryModelDto){
         CategoryModel NewCategory= new CategoryModel();
         NewCategory.setCategoryName(categoryModelDto.getCategoryName());
@@ -69,5 +74,11 @@ public class CategoryService {
         return NewCategory;
     }
 
+
+    private Object getcategories(List<CategoryModel> all) {
+        HashSet<Object> categories= new HashSet<Object>() ;
+        categories.addAll(all);
+        return categories;
+    }
 
 }

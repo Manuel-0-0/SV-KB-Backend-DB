@@ -35,11 +35,13 @@ public interface CategoryRepo extends JpaRepository<CategoryModel, Long> {
     )
     void backdateArticleNum(@Param("Id") Long Id);
 
+
+    @Transactional
     @Query(
-            value = "Select * from tbl_category",
+            value = "select id,article_num,category_name from tbl_category",
             nativeQuery = true
     )
-    List<CategoryModel> findAll();
+    List<CategoryModel> findAllCat();
 
     @Modifying
     @Transactional

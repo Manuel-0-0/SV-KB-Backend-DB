@@ -30,7 +30,7 @@ public class CategoryController {
 
     @CrossOrigin
     @GetMapping(path = "/AllCategories")
-    public List<CategoryModel> AllPosts(){
+    public ResponseEntity<?> AllCategories(){
         return categoryService.getAllTheCategories();
     }
 
@@ -43,8 +43,7 @@ public class CategoryController {
 
     @PutMapping(path = "/Update/{Id}")
     public ResponseEntity<?> EditCategory(@PathVariable Long Id, @RequestBody CategoryModelDto categoryModelDto){
-        categoryService.UpdateCategory(Id,categoryModelDto);
-        return ResponseEntity.ok("updated!");
+        return categoryService.UpdateCategory(Id,categoryModelDto);
     }
 
     @DeleteMapping(path = "Delete/{Id}")
