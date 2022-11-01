@@ -8,9 +8,12 @@ import com.SVKB.BackendApp.service.ArticleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.parser.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
 @Slf4j
@@ -34,8 +37,10 @@ public class ArticleController {
     }
 
     @GetMapping(path = "/All")
-    public ResponseEntity<?> AllArticles(){
-        return articleService.AllArticles();
+    public ResponseEntity<?> AllArticles(@RequestParam(defaultValue = "0")int x,
+                                         @RequestParam(defaultValue = "10")int y,
+                                         @RequestParam(defaultValue = "desc") String order){
+        return articleService.AllArticles(x,y,order);
     }
 
     @DeleteMapping(path = "/Delete/{Id}")

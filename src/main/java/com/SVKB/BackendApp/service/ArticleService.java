@@ -8,9 +8,9 @@ import com.SVKB.BackendApp.repo.ArticleRepo;
 import com.SVKB.BackendApp.repo.CategoryRepo;
 import com.SVKB.BackendApp.repo.SvUserRepo;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -18,7 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -71,13 +70,23 @@ public class ArticleService {
     }
 
 
-    //find all articles
+    //find all articles as a page x and y
     @Transactional
-    public ResponseEntity<?> AllArticles(){
-//        Pageable pageable = (Pageable) PageRequest.of(page,size);
-        List<ArticleModel> all=articleRepo.findAll();
+    public ResponseEntity<?> AllArticles(int pag, int NoContent, String order){
+        List<ArticleModel> all = null;
 
-        return ResponseEntity.ok().body(getArticlePlus(all));
+        if(order.contains("asc")){
+            PageRequest pageRequest = PageRequest.of(pag, NoContent);
+            all=articleRepo.findAll(pageRequest,Sort.by("Id").ascending());
+        }else if(order.contains("desc")){
+            PageRequest pageRequest = PageRequest.of(pag, NoContent);
+            all=articleRepo.findAll(pageRequest, Sort.by("Id").descending());
+        }
+
+//        Pageable pageable = (Pageable) PageRequest.of(page,size);
+
+
+        return ResponseEntity.ok().body(PagedArticlesPlus(all));
     }
 
 
@@ -89,7 +98,7 @@ public class ArticleService {
         if(all==null) {
             return ResponseEntity.ok().body("no results found!");
         }
-            return ResponseEntity.ok().body(getArticlePlus(all));
+            return ResponseEntity.ok().body(RegArticlesPlus(all));
         }
 
 
@@ -114,7 +123,7 @@ public class ArticleService {
             return ResponseEntity.badRequest().body("Category not found.");
         }
         List<ArticleModel> results= articleRepo.articlesByCategories(CategoryId);
-        return ResponseEntity.status(HttpStatus.OK).body(getArticlePlus(results));
+        return ResponseEntity.status(HttpStatus.OK).body(RegArticlesPlus(results));
 
     }
 
@@ -130,28 +139,15 @@ public class ArticleService {
     public ResponseEntity<?> articleByUsr(Long id){
         if(svUserRepo.existsById(id)){
             List<ArticleModel> all= articleRepo.findArticleModelByUser(id);
-            return ResponseEntity.ok().body(getArticlePlus(all));
+            return ResponseEntity.ok().body(RegArticlesPlus(all));
         }else{
             return ResponseEntity.badRequest().body("No User Found");
         }
     }
 
-    private Object getArticlePlus(List<ArticleModel> all) {
-        HashSet<Object> Articles= new HashSet<Object>() ;
-        for (ArticleModel one:all) {
-            Map<String, Object> map = new HashMap<String, Object>();
-            CategoryModel artCategory = one.getCategory();
-            SvUser user= one.getSvUser();
 
-            map.put("Article", one);
-            map.put("category_name", artCategory.getCategoryName());
-            map.put("category_id", artCategory.getId());
-            map.put("user_id",user.getUserId());
-            map.put("user_name",user.getName());
-            Articles.add(map);
-        }
-        return Articles;
-    }
+
+
 
     // find articles by based on draft status
     @Transactional
@@ -159,9 +155,9 @@ public class ArticleService {
         List<ArticleModel> allTrue=articleRepo.findArticleModelByDraftStatusIsTrue();
         List<ArticleModel> allFalse=articleRepo.findArticleModelByDraftStatusIsFalse();
         if(status.equalsIgnoreCase("false")){
-            return ResponseEntity.ok().body(getArticlePlus(allTrue));
+            return ResponseEntity.ok().body(RegArticlesPlus(allTrue));
         }else if(status.equalsIgnoreCase("true")){
-            return ResponseEntity.ok().body(getArticlePlus(allFalse));
+            return ResponseEntity.ok().body(RegArticlesPlus(allFalse));
         }else{
             return ResponseEntity.badRequest().body("Invalid DraftStatus");
         }
@@ -182,6 +178,41 @@ public class ArticleService {
     }
 
 
+
+    //get all articles regularly
+    private Object RegArticlesPlus(List<ArticleModel> all) {
+        HashSet<Object> Articles= new HashSet<Object>();
+        for (ArticleModel one:all) {
+            Articles.add(ListMapper(one));
+        }
+        return Articles;
+    }
+
+    //get all articles as a page
+    private Object PagedArticlesPlus(List<ArticleModel> all) {
+        HashSet<Object> Articless= new HashSet<Object>();
+        for (ArticleModel one:all) {
+            Articless.add(ListMapper(one));
+        }
+        return Articless;
+    }
+
+
+    //object mapper for the article object
+    private Map<String, Object> ListMapper(ArticleModel one) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        CategoryModel artCategory = one.getCategory();
+        SvUser user= one.getSvUser();
+
+        map.put("Article", one);
+        map.put("category_name", artCategory.getCategoryName());
+        map.put("category_id", artCategory.getId());
+        map.put("user_id",user.getUserId());
+        map.put("user_name",user.getName());
+        return map;
+    }
+
+    //map from dto to article model
     public ArticleModel MapFromDtoArticleModel(ArticleModelDto articleModelDto){
         ArticleModel newArticle= new ArticleModel();
         newArticle.setContent(articleModelDto.getContent());

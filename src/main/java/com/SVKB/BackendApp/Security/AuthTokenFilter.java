@@ -60,7 +60,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     }
                 } catch (Exception e) {
-                    throw new IllegalStateException("Error Processing Request, Reason: "+ e.getCause()+", Message: "+e.getMessage() );
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST,"JWT error: "+e.getMessage());
+                    throw  new IllegalStateException("Error Processing Request, Reason: "+ e.getCause()+", Message: "+e.getMessage() );
+
                 }
             }
         filterChain.doFilter(request, response);

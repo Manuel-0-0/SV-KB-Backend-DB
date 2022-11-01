@@ -1,5 +1,7 @@
 package com.SVKB.BackendApp.repo;
 import com.SVKB.BackendApp.model.ArticleModel;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -28,7 +30,7 @@ public interface ArticleRepo extends JpaRepository<ArticleModel,Long> {
     List<ArticleModel> articlesByCategories(Long CategoryId);
 
     @Query("select a from ArticleModel a")
-    List<ArticleModel> findAll();
+    List<ArticleModel> findAll(PageRequest pageable, Sort sort);
 
     @Transactional
     @Query(value = "SELECT * FROM tbl_article p WHERE draft_status='true'",
