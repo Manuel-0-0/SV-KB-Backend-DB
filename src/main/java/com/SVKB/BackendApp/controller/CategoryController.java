@@ -30,8 +30,10 @@ public class CategoryController {
 
     @CrossOrigin
     @GetMapping(path = "/AllCategories")
-    public ResponseEntity<?> AllCategories(){
-        return categoryService.getAllTheCategories();
+    public ResponseEntity<?> AllCategories(@RequestParam(defaultValue = "0")int x,
+                                           @RequestParam(defaultValue = "10")int y,
+                                           @RequestParam(defaultValue = "desc") String order){
+        return categoryService.getAllTheCategories(x,y,order);
     }
 
 
@@ -52,7 +54,10 @@ public class CategoryController {
     }
 
     @GetMapping(path="/Search")
-    public ResponseEntity<?> SearchCategories(@RequestParam String keyword){
-        return categoryService.categoryByName(keyword);
+    public ResponseEntity<?> SearchCategories(@RequestParam String keyword,
+                                              @RequestParam(defaultValue = "0")int x,
+                                              @RequestParam(defaultValue = "10")int y,
+                                              @RequestParam(defaultValue = "desc") String order){
+        return categoryService.categoryByName(keyword,x,y,order);
     }
 }

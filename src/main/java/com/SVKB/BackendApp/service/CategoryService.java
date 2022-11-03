@@ -3,6 +3,7 @@ package com.SVKB.BackendApp.service;
 import com.SVKB.BackendApp.DTOs.CategoryModelDto;
 import com.SVKB.BackendApp.model.ArticleModel;
 import com.SVKB.BackendApp.model.CategoryModel;
+import com.SVKB.BackendApp.model.Sorter;
 import com.SVKB.BackendApp.model.SvUser;
 import com.SVKB.BackendApp.repo.ArticleRepo;
 import com.SVKB.BackendApp.repo.CategoryRepo;
@@ -42,8 +43,8 @@ public class CategoryService {
         }
         }
 
-        public ResponseEntity<?> categoryByName(String name){
-        List<CategoryModel> categories = categoryRepo.findCategoryModelByCategoryName(name);
+        public ResponseEntity<?> categoryByName(String name,int pag, int NoContent, String order){
+        List<CategoryModel> categories = categoryRepo.findCategoryModelByCategoryName(name,sort(pag, NoContent,order));
         if(!(categories ==null)){
             return ResponseEntity.ok().body(getcategories(categories));
         }else{
@@ -64,8 +65,8 @@ public class CategoryService {
 
 
     @Transactional
-    public ResponseEntity<?> getAllTheCategories(){
-        List<CategoryModel> categories=categoryRepo.findAllCat();
+    public ResponseEntity<?> getAllTheCategories(int pag, int NoContent, String order){
+        List<CategoryModel> categories=categoryRepo.findAllCat(sort(pag, NoContent,order));
         return ResponseEntity.ok().body(getcategories(categories));
     }
 
@@ -77,7 +78,22 @@ public class CategoryService {
         return NewCategory;
     }
 
+    //sorter
+    public PageRequest sort(int pag, int NoContent, String order){
+        //        Pageable pageable = (Pageable) PageRequest.of(page,size);
+        Sorter sorter= new Sorter(pag,NoContent,ord(order));
 
+        return PageRequest.of(sorter.getPag(), sorter.getNoContent(), sorter.getOrder());
+    }
+
+    //order
+    public Sort  ord(String order){
+        if(order.contains("asc")){
+
+            return Sort.by(Sort.Direction.ASC, "Id");
+        }
+        return Sort.by(Sort.Direction.DESC, "Id");
+    }
     private Object getcategories(List<CategoryModel> all) {
         HashSet<Object> categories= new HashSet<Object>() ;
         categories.addAll(all);

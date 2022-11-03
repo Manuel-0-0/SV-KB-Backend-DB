@@ -2,6 +2,7 @@ package com.SVKB.BackendApp.repo;
 
 import com.SVKB.BackendApp.model.ArticleModel;
 import com.SVKB.BackendApp.model.CategoryModel;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -41,7 +42,7 @@ public interface CategoryRepo extends JpaRepository<CategoryModel, Long> {
             value = "select id,article_num,category_name from tbl_category",
             nativeQuery = true
     )
-    List<CategoryModel> findAllCat();
+    List<CategoryModel> findAllCat(PageRequest pageable);
 
     @Modifying
     @Transactional
@@ -56,5 +57,5 @@ public interface CategoryRepo extends JpaRepository<CategoryModel, Long> {
             value = "SELECT * FROM tbl_category t WHERE t.category_name LIKE %?1%",
             nativeQuery = true
     )
-    List<CategoryModel> findCategoryModelByCategoryName(String title);
+    List<CategoryModel> findCategoryModelByCategoryName(String title, PageRequest pageable);
 }
