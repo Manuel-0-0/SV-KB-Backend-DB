@@ -7,6 +7,8 @@ import com.SVKB.BackendApp.model.SvUser;
 import com.SVKB.BackendApp.repo.ArticleRepo;
 import com.SVKB.BackendApp.repo.CategoryRepo;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ public class CategoryService {
 
     private CategoryRepo categoryRepo;
     private ArticleRepo articleRepo;
+
 
 
     public ResponseEntity<String> CreateCategory(CategoryModelDto categoryModelDto){
@@ -50,7 +53,7 @@ public class CategoryService {
 
 
         public ResponseEntity<?> DeleteCategory(Long Id){
-        List<ArticleModel> articles= articleRepo.articlesByCategories(Id);
+        List<ArticleModel> articles= articleRepo.articlesByCategories(Id, PageRequest.of(0,Integer.MAX_VALUE, Sort.unsorted()));
             for (ArticleModel article:articles) {
                 article.setCategory(null);
                 articleRepo.deleteById(article.getId());

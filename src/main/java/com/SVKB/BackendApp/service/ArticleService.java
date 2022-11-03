@@ -3,6 +3,7 @@ package com.SVKB.BackendApp.service;
 import com.SVKB.BackendApp.DTOs.ArticleModelDto;
 import com.SVKB.BackendApp.model.ArticleModel;
 import com.SVKB.BackendApp.model.CategoryModel;
+import com.SVKB.BackendApp.model.Sorter;
 import com.SVKB.BackendApp.model.SvUser;
 import com.SVKB.BackendApp.repo.ArticleRepo;
 import com.SVKB.BackendApp.repo.CategoryRepo;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -71,34 +73,18 @@ public class ArticleService {
 
 
     //find all articles as a page x and y
-    @Transactional
-    public ResponseEntity<?> AllArticles(int pag, int NoContent, String order){
-        List<ArticleModel> all = null;
 
-        if(order.contains("asc")){
-            PageRequest pageRequest = PageRequest.of(pag, NoContent);
-            all=articleRepo.findAll(pageRequest,Sort.by("Id").ascending());
-        }else if(order.contains("desc")){
-            PageRequest pageRequest = PageRequest.of(pag, NoContent);
-            all=articleRepo.findAll(pageRequest, Sort.by("Id").descending());
-        }
-
-//        Pageable pageable = (Pageable) PageRequest.of(page,size);
-
-
-        return ResponseEntity.ok().body(PagedArticlesPlus(all));
-    }
 
 
     //search for all articles using a keyword
     @Transactional
-    public ResponseEntity<?> searchArticles(String keyword){
-        List<ArticleModel> all= articleRepo.findBySearch(keyword);
+    public ResponseEntity<?> searchArticles(String keyword, int pag, int NoContent, String order){
+        List<ArticleModel> all= articleRepo.findBySearch(keyword,sort(pag, NoContent,order));
 
         if(all==null) {
             return ResponseEntity.ok().body("no results found!");
         }
-            return ResponseEntity.ok().body(RegArticlesPlus(all));
+            return ResponseEntity.ok().body(PagedArticlesPlus(all));
         }
 
 
@@ -118,28 +104,28 @@ public class ArticleService {
 
     //find articles by based on category
     @Transactional
-    public ResponseEntity<?> ArticlesByCategories(Long CategoryId){
+    public ResponseEntity<?> ArticlesByCategories(Long CategoryId, int pag, int NoContent, String order){
         if(!categoryRepo.existsById(CategoryId)){
             return ResponseEntity.badRequest().body("Category not found.");
         }
-        List<ArticleModel> results= articleRepo.articlesByCategories(CategoryId);
-        return ResponseEntity.status(HttpStatus.OK).body(RegArticlesPlus(results));
+        List<ArticleModel> results= articleRepo.articlesByCategories(CategoryId,sort(pag, NoContent,order));
+        return ResponseEntity.status(HttpStatus.OK).body(PagedArticlesPlus(results));
 
     }
 
 
     //test method
-    public ResponseEntity<?> testes(Long Id){
-        List<ArticleModel> res=articleRepo.articlesByCategories(Id);
-        return ResponseEntity.ok().body(res);
-    }
+//    public ResponseEntity<?> testes(Long Id,int pag, int NoContent, String order){
+//        List<ArticleModel> res=articleRepo.articlesByCategories(Id);
+//        return ResponseEntity.ok().body(res);
+//    }
 
     //find articles by based on the user that created it
     @Transactional
-    public ResponseEntity<?> articleByUsr(Long id){
+    public ResponseEntity<?> articleByUsr(Long id,int pag, int NoContent, String order){
         if(svUserRepo.existsById(id)){
-            List<ArticleModel> all= articleRepo.findArticleModelByUser(id);
-            return ResponseEntity.ok().body(RegArticlesPlus(all));
+            List<ArticleModel> all= articleRepo.findArticleModelByUser(id,sort(pag, NoContent,order));
+            return ResponseEntity.ok().body(PagedArticlesPlus(all));
         }else{
             return ResponseEntity.badRequest().body("No User Found");
         }
@@ -151,13 +137,13 @@ public class ArticleService {
 
     // find articles by based on draft status
     @Transactional
-    public ResponseEntity<?> DraftStatus(String status){
-        List<ArticleModel> allTrue=articleRepo.findArticleModelByDraftStatusIsTrue();
-        List<ArticleModel> allFalse=articleRepo.findArticleModelByDraftStatusIsFalse();
+    public ResponseEntity<?> DraftStatus(String status,int pag, int NoContent, String order){
+        List<ArticleModel> allTrue=articleRepo.findArticleModelByDraftStatusIsTrue(sort(pag, NoContent,order));
+        List<ArticleModel> allFalse=articleRepo.findArticleModelByDraftStatusIsFalse(sort(pag, NoContent,order));
         if(status.equalsIgnoreCase("false")){
-            return ResponseEntity.ok().body(RegArticlesPlus(allTrue));
+            return ResponseEntity.ok().body(PagedArticlesPlus(allTrue));
         }else if(status.equalsIgnoreCase("true")){
-            return ResponseEntity.ok().body(RegArticlesPlus(allFalse));
+            return ResponseEntity.ok().body(PagedArticlesPlus(allFalse));
         }else{
             return ResponseEntity.badRequest().body("Invalid DraftStatus");
         }
@@ -177,8 +163,28 @@ public class ArticleService {
         }
     }
 
+    @Transactional
+    public ResponseEntity<?> AllArticles(int pag, int NoContent, String order){
+        List<ArticleModel> all = articleRepo.findAll(sort(pag, NoContent,order));
+        return ResponseEntity.ok().body(PagedArticlesPlus(all));
+    }
 
+    //sorter
+    public PageRequest sort(int pag, int NoContent, String order){
+        //        Pageable pageable = (Pageable) PageRequest.of(page,size);
+        Sorter sorter= new Sorter(pag,NoContent,ord(order));
 
+        return PageRequest.of(sorter.getPag(), sorter.getNoContent(), sorter.getOrder());
+    }
+
+    //order
+    public Sort  ord(String order){
+        if(order.contains("asc")){
+
+            return Sort.by(Sort.Direction.ASC, "Id");
+        }
+        return Sort.by(Sort.Direction.DESC, "Id");
+    }
     //get all articles regularly
     private Object RegArticlesPlus(List<ArticleModel> all) {
         HashSet<Object> Articles= new HashSet<Object>();

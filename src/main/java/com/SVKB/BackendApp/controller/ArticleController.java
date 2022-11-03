@@ -49,13 +49,19 @@ public class ArticleController {
     }
 
     @GetMapping(path="/Search")
-    public ResponseEntity<?> SearchArticles(@RequestParam String keyword){
-        return articleService.searchArticles(keyword);
+    public ResponseEntity<?> SearchArticles(@RequestParam String keyword,
+                                            @RequestParam(defaultValue = "0")int x,
+                                            @RequestParam(defaultValue = "10")int y,
+                                            @RequestParam(defaultValue = "desc") String order){
+        return articleService.searchArticles(keyword,x,y,order);
     }
 
     @GetMapping(path = "/All" , params = "draftStatus")
-    public ResponseEntity<?> publishedArticles(@RequestParam String draftStatus){
-        return  articleService.DraftStatus(draftStatus);
+    public ResponseEntity<?> publishedArticles(@RequestParam String draftStatus,
+                                               @RequestParam(defaultValue = "0")int x,
+                                               @RequestParam(defaultValue = "10")int y,
+                                               @RequestParam(defaultValue = "desc") String order){
+        return  articleService.DraftStatus(draftStatus,x,y,order);
     }
 
     @GetMapping(path = "/{Id}")
@@ -64,26 +70,32 @@ public class ArticleController {
     }
 
     @GetMapping(path = "/" ,params = "CategoryId")
-    public ResponseEntity<?> SearchByCategories(@RequestParam Long CategoryId){
-        return articleService.ArticlesByCategories(CategoryId);
+    public ResponseEntity<?> SearchByCategories(@RequestParam Long CategoryId,
+                                                @RequestParam(defaultValue = "0")int x,
+                                                @RequestParam(defaultValue = "10")int y,
+                                                @RequestParam(defaultValue = "desc") String order){
+        return articleService.ArticlesByCategories(CategoryId,x,y,order);
     }
 
-    @GetMapping(path = "/test/")
-    public ResponseEntity<?> test(@RequestParam Long id){
-        return articleService.testes(id);
-    }
+//    @GetMapping(path = "/test/")
+//    public ResponseEntity<?> test(@RequestParam Long id){
+//        return articleService.testes(id);
+//    }
     @PutMapping(path ="/Update/{Id}")
     public ResponseEntity<?> UpdateArticles(@PathVariable Long Id, @RequestBody ArticleModelDto articleModelDto){
         return articleService.UpdateArticle(Id,articleModelDto);
     }
 
     @GetMapping(path ="/user/{id}")
-    public ResponseEntity<?> UserArticles(@PathVariable Long id){
-        return articleService.articleByUsr(id);
+    public ResponseEntity<?> UserArticles(@PathVariable Long id,
+                                          @RequestParam(defaultValue = "0")int x,
+                                          @RequestParam(defaultValue = "10")int y,
+                                          @RequestParam(defaultValue = "desc") String order){
+        return articleService.articleByUsr(id,x,y,order);
     }
 
-    @GetMapping(path="/", params = "draft_status")
-    public ResponseEntity<?> draftStatus(@RequestParam String draft_status){
-        return articleService.DraftStatus(draft_status);
-    }
+//    @GetMapping(path="/", params = "draft_status")
+//    public ResponseEntity<?> draftStatus(@RequestParam String draft_status){
+//        return articleService.DraftStatus(draft_status);
+//    }
 }
