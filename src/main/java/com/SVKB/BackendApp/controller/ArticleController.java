@@ -1,19 +1,14 @@
 package com.SVKB.BackendApp.controller;
 
 import com.SVKB.BackendApp.DTOs.ArticleModelDto;
-import com.SVKB.BackendApp.model.ArticleModel;
 import com.SVKB.BackendApp.repo.ArticleRepo;
 import com.SVKB.BackendApp.repo.SvUserRepo;
 import com.SVKB.BackendApp.service.ArticleService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.parser.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
 @Slf4j
@@ -37,10 +32,10 @@ public class ArticleController {
     }
 
     @GetMapping(path = "/All")
-    public ResponseEntity<?> AllArticles(@RequestParam(defaultValue = "0")int x,
-                                         @RequestParam(defaultValue = "10")int y,
+    public ResponseEntity<?> AllArticles(@RequestParam(defaultValue = "0")int page,
+                                         @RequestParam(defaultValue = "10")int limit,
                                          @RequestParam(defaultValue = "desc") String order){
-        return articleService.AllArticles(x,y,order);
+        return articleService.AllArticles(page, limit,order);
     }
 
     @DeleteMapping(path = "/Delete/{Id}")
@@ -50,18 +45,18 @@ public class ArticleController {
 
     @GetMapping(path="/Search")
     public ResponseEntity<?> SearchArticles(@RequestParam String keyword,
-                                            @RequestParam(defaultValue = "0")int x,
-                                            @RequestParam(defaultValue = "10")int y,
+                                            @RequestParam(defaultValue = "0")int page,
+                                            @RequestParam(defaultValue = "10")int limit,
                                             @RequestParam(defaultValue = "desc") String order){
-        return articleService.searchArticles(keyword,x,y,order);
+        return articleService.searchArticles(keyword,page,limit,order);
     }
 
     @GetMapping(path = "/All" , params = "draftStatus")
     public ResponseEntity<?> publishedArticles(@RequestParam String draftStatus,
-                                               @RequestParam(defaultValue = "0")int x,
-                                               @RequestParam(defaultValue = "10")int y,
+                                               @RequestParam(defaultValue = "0")int page,
+                                               @RequestParam(defaultValue = "10")int limit,
                                                @RequestParam(defaultValue = "desc") String order){
-        return  articleService.DraftStatus(draftStatus,x,y,order);
+        return  articleService.DraftStatus(draftStatus, page, limit,order);
     }
 
     @GetMapping(path = "/{Id}")
@@ -71,10 +66,10 @@ public class ArticleController {
 
     @GetMapping(path = "/" ,params = "CategoryId")
     public ResponseEntity<?> SearchByCategories(@RequestParam Long CategoryId,
-                                                @RequestParam(defaultValue = "0")int x,
-                                                @RequestParam(defaultValue = "10")int y,
+                                                @RequestParam(defaultValue = "0")int page,
+                                                @RequestParam(defaultValue = "10")int limit,
                                                 @RequestParam(defaultValue = "desc") String order){
-        return articleService.ArticlesByCategories(CategoryId,x,y,order);
+        return articleService.ArticlesByCategories(CategoryId,page,limit,order);
     }
 
 //    @GetMapping(path = "/test/")
@@ -88,10 +83,10 @@ public class ArticleController {
 
     @GetMapping(path ="/user/{id}")
     public ResponseEntity<?> UserArticles(@PathVariable Long id,
-                                          @RequestParam(defaultValue = "0")int x,
-                                          @RequestParam(defaultValue = "10")int y,
+                                          @RequestParam(defaultValue = "0")int page,
+                                          @RequestParam(defaultValue = "10")int limit,
                                           @RequestParam(defaultValue = "desc") String order){
-        return articleService.articleByUsr(id,x,y,order);
+        return articleService.articleByUsr(id,page,limit,order);
     }
 
 //    @GetMapping(path="/", params = "draft_status")
