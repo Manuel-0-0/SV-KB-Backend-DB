@@ -27,14 +27,18 @@ import java.util.*;
 @Slf4j
 @Service
 public class ArticleService {
-    @Autowired
-    ArticleRepo articleRepo;
-    @Autowired
-    CategoryRepo categoryRepo;
 
-    @Autowired
-    private SvUserRepo svUserRepo;
+    private final ArticleRepo articleRepo;
+    private final CategoryRepo categoryRepo;
+    private final SvUserRepo svUserRepo;
+
     DateTimeFormatter formatter =DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+    public ArticleService(ArticleRepo articleRepo, CategoryRepo categoryRepo, SvUserRepo svUserRepo) {
+        this.articleRepo = articleRepo;
+        this.categoryRepo = categoryRepo;
+        this.svUserRepo = svUserRepo;
+    }
 
     //create new article
     @Transactional

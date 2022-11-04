@@ -19,7 +19,6 @@ import java.util.List;
 public class CategoryController {
 
     private CategoryService categoryService;
-
     private CategoryRepo categoryRepo;
 
     @PostMapping(path="/create")
@@ -48,7 +47,7 @@ public class CategoryController {
         return categoryService.UpdateCategory(Id,categoryModelDto);
     }
 
-    @DeleteMapping(path = "Delete/{Id}")
+    @DeleteMapping(path = "/Delete/{Id}")
     public ResponseEntity<?> DeleteCategory(@PathVariable Long Id){
         return categoryService.DeleteCategory(Id);
     }

@@ -20,8 +20,8 @@ import java.util.*;
 @AllArgsConstructor
 public class CategoryService {
 
-    private CategoryRepo categoryRepo;
-    private ArticleRepo articleRepo;
+    private final CategoryRepo categoryRepo;
+    private final ArticleRepo articleRepo;
 
 
 
