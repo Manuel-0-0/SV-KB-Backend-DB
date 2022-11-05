@@ -126,6 +126,15 @@ public class ArticleService {
 
     }
 
+    @Transactional
+    public ResponseEntity<?> PublishedArticlesByCategories(Long CategoryId, int pag, int NoContent, String order){
+        if(!categoryRepo.existsById(CategoryId)){
+            return ResponseEntity.badRequest().body("Category not found.");
+        }
+        List<ArticleModel> results= articleRepo.publishedArticlesByCategories(CategoryId,sort(pag, NoContent,order));
+        return ResponseEntity.status(HttpStatus.OK).body(PagedArticlesPlus(results));
+
+    }
 
     //test method
 //    public ResponseEntity<?> testes(Long Id,int pag, int NoContent, String order){

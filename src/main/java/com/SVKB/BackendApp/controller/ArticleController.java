@@ -81,6 +81,16 @@ public class ArticleController {
         return articleService.ArticlesByCategories(CategoryId,page,limit,order);
     }
 
+    @GetMapping(path = "/published/" ,params = "CategoryId")
+    public ResponseEntity<?> SearchByPublishedCategories(@RequestParam Long CategoryId,
+                                                @RequestParam(defaultValue = "0")int page,
+                                                @RequestParam(defaultValue = "10")int limit,
+                                                @RequestParam(defaultValue = "desc") String order){
+        return articleService.PublishedArticlesByCategories(CategoryId,page,limit,order);
+    }
+
+
+
 //    @GetMapping(path = "/test/")
 //    public ResponseEntity<?> test(@RequestParam Long id){
 //        return articleService.testes(id);

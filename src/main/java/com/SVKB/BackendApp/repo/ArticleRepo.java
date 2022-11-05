@@ -39,6 +39,12 @@ public interface ArticleRepo extends JpaRepository<ArticleModel,Long> {
     nativeQuery = true)
     List<ArticleModel> articlesByCategories(Long CategoryId, PageRequest pageable);
 
+    @Transactional
+    @Query(value = "SELECT * FROM tbl_article p WHERE Category_Id=:CategoryId AND draft_status='true'",
+            nativeQuery = true)
+    List<ArticleModel> publishedArticlesByCategories(Long CategoryId, PageRequest pageable);
+
+
     @Query(value = "select * from tbl_article p",
             nativeQuery = true)
     List<ArticleModel> findAll(PageRequest pageable);
