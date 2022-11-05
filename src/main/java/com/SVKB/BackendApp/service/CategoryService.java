@@ -1,28 +1,37 @@
 package com.SVKB.BackendApp.service;
 
+import com.SVKB.BackendApp.DTOs.ArticleModelDto;
 import com.SVKB.BackendApp.DTOs.CategoryModelDto;
 import com.SVKB.BackendApp.model.ArticleModel;
 import com.SVKB.BackendApp.model.CategoryModel;
 import com.SVKB.BackendApp.model.Sorter;
-import com.SVKB.BackendApp.model.SvUser;
 import com.SVKB.BackendApp.repo.ArticleRepo;
 import com.SVKB.BackendApp.repo.CategoryRepo;
-import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+@Slf4j
 @Service
-@AllArgsConstructor
 public class CategoryService {
 
     private final CategoryRepo categoryRepo;
     private final ArticleRepo articleRepo;
 
+    DateTimeFormatter formatter =DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+    public CategoryService(CategoryRepo categoryRepo, ArticleRepo articleRepo) {
+        this.categoryRepo = categoryRepo;
+        this.articleRepo = articleRepo;
+    }
 
 
     public ResponseEntity<String> CreateCategory(CategoryModelDto categoryModelDto){
@@ -37,7 +46,8 @@ public class CategoryService {
     public ResponseEntity<?> UpdateCategory(Long Id, CategoryModelDto categoryModelDto){
         if(categoryRepo.findById(Id).isPresent()){
             categoryRepo.UpdateCategoryName(Id, categoryModelDto.getCategoryName());
-            return ResponseEntity.ok(categoryRepo.findById(Id) + "new Category added!");
+            categoryRepo.findById(Id).get().setDateUpdated(LocalDateTime.now().format(formatter));
+            return ResponseEntity.ok().body(categoryModelDto.getCategoryName() + " updated");
         }else {
             return ResponseEntity.badRequest().body("Category not found!");
         }
@@ -66,7 +76,9 @@ public class CategoryService {
 
     @Transactional
     public ResponseEntity<?> getAllTheCategories(int pag, int NoContent, String order){
+
         List<CategoryModel> categories=categoryRepo.findAllCat(sort(pag, NoContent,order));
+        log.info(categories.toString());
         return ResponseEntity.ok().body(getcategories(categories));
     }
 
@@ -74,9 +86,10 @@ public class CategoryService {
         CategoryModel NewCategory= new CategoryModel();
         NewCategory.setCategoryName(categoryModelDto.getCategoryName());
         NewCategory.setArticleNum(0);
-
+        NewCategory.setDateCreated(LocalDateTime.now().format(formatter));
         return NewCategory;
     }
+
 
     //sorter
     public PageRequest sort(int pag, int NoContent, String order){

@@ -19,7 +19,8 @@ public interface CategoryRepo extends JpaRepository<CategoryModel, Long> {
 
     Boolean existsByCategoryName(String categoryName);
 
-    public Optional<CategoryModel> findById(Long Id);
+    Optional<CategoryModel> findById(Long Id);
+
     @Modifying
     @Transactional
     @Query(
@@ -37,9 +38,9 @@ public interface CategoryRepo extends JpaRepository<CategoryModel, Long> {
     void backdateArticleNum(@Param("Id") Long Id);
 
 
-    @Transactional
+
     @Query(
-            value = "select id,article_num,category_name from tbl_category",
+            value = "select id,article_num,category_name,date_created,date_updated from tbl_category p",
             nativeQuery = true
     )
     List<CategoryModel> findAllCat(PageRequest pageable);
@@ -54,7 +55,7 @@ public interface CategoryRepo extends JpaRepository<CategoryModel, Long> {
 
     @Transactional
     @Query(
-            value = "SELECT * FROM tbl_category t WHERE t.category_name LIKE %?1%",
+            value = "SELECT id,article_num,category_name,date_created,date_updated FROM tbl_category t WHERE t.category_name LIKE %?1%",
             nativeQuery = true
     )
     List<CategoryModel> findCategoryModelByCategoryName(String title, PageRequest pageable);
