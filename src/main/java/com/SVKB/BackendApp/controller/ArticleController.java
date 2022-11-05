@@ -5,7 +5,6 @@ import com.SVKB.BackendApp.repo.ArticleRepo;
 import com.SVKB.BackendApp.repo.SvUserRepo;
 import com.SVKB.BackendApp.service.ArticleService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,13 +15,15 @@ import java.util.Locale;
 @RequestMapping(path = "/api/v1/articles", produces="application/json")
 public class ArticleController {
 
-    @Autowired
-    ArticleService articleService;
-    @Autowired
-    ArticleRepo articleRepo;
+    private final ArticleService articleService;
+    private final ArticleRepo articleRepo;
+    private final SvUserRepo svUserRepo;
 
-    @Autowired
-    SvUserRepo svUserRepo;
+    public ArticleController(ArticleService articleService, ArticleRepo articleRepo, SvUserRepo svUserRepo) {
+        this.articleService = articleService;
+        this.articleRepo = articleRepo;
+        this.svUserRepo = svUserRepo;
+    }
 
     @PostMapping(path = "/NewArticle")
     public ResponseEntity<?> CreateNewArticles(@RequestBody ArticleModelDto articleModelDto){
@@ -49,6 +50,14 @@ public class ArticleController {
                                             @RequestParam(defaultValue = "10")int limit,
                                             @RequestParam(defaultValue = "desc") String order){
         return articleService.searchArticles(keyword,page,limit,order);
+    }
+
+    @GetMapping(path="/Search/")
+    public ResponseEntity<?> SearchPublishedArticles(@RequestParam String keyword,
+                                            @RequestParam(defaultValue = "0")int page,
+                                            @RequestParam(defaultValue = "10")int limit,
+                                            @RequestParam(defaultValue = "desc") String order){
+        return articleService.searchPublishedArticles(keyword,page,limit,order);
     }
 
     @GetMapping(path = "/All" , params = "draftStatus")

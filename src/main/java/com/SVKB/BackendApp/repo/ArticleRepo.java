@@ -24,6 +24,16 @@ public interface ArticleRepo extends JpaRepository<ArticleModel,Long> {
     nativeQuery = true)
     List<ArticleModel> findBySearch(String keyword,PageRequest pageable);
 
+
+    @Transactional
+    @Query(value = "SELECT * FROM tbl_article p " +
+            "WHERE p.title LIKE %?1% " +
+            "AND p.draft_status=false",
+            nativeQuery = true)
+    List<ArticleModel> findBySearchPublished(String keyword,PageRequest pageable);
+
+
+
     @Transactional
     @Query(value = "SELECT * FROM tbl_article p WHERE Category_Id=:CategoryId",
     nativeQuery = true)

@@ -84,12 +84,21 @@ public class ArticleService {
     @Transactional
     public ResponseEntity<?> searchArticles(String keyword, int pag, int NoContent, String order){
         List<ArticleModel> all= articleRepo.findBySearch(keyword,sort(pag, NoContent,order));
-
         if(all==null) {
             return ResponseEntity.ok().body("no results found!");
         }
             return ResponseEntity.ok().body(PagedArticlesPlus(all));
         }
+
+    @Transactional
+    public ResponseEntity<?> searchPublishedArticles(String keyword, int pag, int NoContent, String order){
+        List<ArticleModel> all= articleRepo.findBySearchPublished(keyword,sort(pag, NoContent,order));
+
+        if(all==null) {
+            return ResponseEntity.ok().body("no results found!");
+        }
+        return ResponseEntity.ok().body(PagedArticlesPlus(all));
+    }
 
 
     //delete one article by Id
