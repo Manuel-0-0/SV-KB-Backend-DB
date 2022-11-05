@@ -159,6 +159,7 @@ public class ArticleService {
             ArticleModel articleModel =articleRepo.findById(Id).get();
             articleModel.setContent(articleModelDto.getContent());
             articleModel.setTitle(articleModelDto.getTitle());
+            articleModel.setDraftStatus(articleModelDto.getDraftStatus());
             articleModel.setDateUpdated(LocalDateTime.now().format(formatter));
             articleRepo.save(articleModel);
             return ResponseEntity.status(200).body(articleRepo.findById(Id)+" Updated");
