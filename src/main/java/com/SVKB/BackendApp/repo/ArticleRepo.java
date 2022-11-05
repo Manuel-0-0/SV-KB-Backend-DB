@@ -28,7 +28,7 @@ public interface ArticleRepo extends JpaRepository<ArticleModel,Long> {
     @Transactional
     @Query(value = "SELECT * FROM tbl_article p " +
             "WHERE p.title LIKE %?1% " +
-            "AND p.draft_status=false",
+            "AND p.draft_status=true",
             nativeQuery = true)
     List<ArticleModel> findBySearchPublished(String keyword,PageRequest pageable);
 
