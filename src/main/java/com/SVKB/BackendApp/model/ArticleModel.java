@@ -50,7 +50,7 @@ public class ArticleModel {
     private CategoryModel category;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SvUser_Id")
+    @JoinColumn(name = "Sv_User_Id")
     @JsonIgnore
     private SvUser svUser;
 

@@ -55,7 +55,7 @@ public interface CategoryRepo extends JpaRepository<CategoryModel, Long> {
 
     @Transactional
     @Query(
-            value = "SELECT id,article_num,category_name,date_created,date_updated FROM tbl_category t WHERE t.category_name LIKE %?1%",
+            value = "SELECT id,article_num,category_name,date_created,date_updated FROM tbl_category t WHERE LOWER(t.category_name) LIKE %?1%",
             nativeQuery = true
     )
     List<CategoryModel> findCategoryModelByCategoryName(String title, PageRequest pageable);

@@ -20,14 +20,14 @@ public interface ArticleRepo extends JpaRepository<ArticleModel,Long> {
 //    List<ArticleModel> findByTitle( String title, PageRequest pageable, Sort sort);
 
     @Transactional
-    @Query(value = "SELECT * FROM tbl_article p WHERE CONCAT(p.title,'') LIKE %?1% ",
+    @Query(value = "SELECT * FROM tbl_article p WHERE LOWER( CONCAT(p.title,'')) LIKE  %?1%  ",
     nativeQuery = true)
     List<ArticleModel> findBySearch(String keyword,PageRequest pageable);
 
 
     @Transactional
     @Query(value = "SELECT * FROM tbl_article p " +
-            "WHERE p.title LIKE %?1% " +
+            "WHERE LOWER( p.title) LIKE %?1% " +
             "AND p.draft_status=true",
             nativeQuery = true)
     List<ArticleModel> findBySearchPublished(String keyword,PageRequest pageable);
