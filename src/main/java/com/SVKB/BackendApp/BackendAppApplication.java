@@ -20,8 +20,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan(basePackages = { "com.*" })
 @EntityScan("com.*")
 public class BackendAppApplication {
-	@Autowired
-	SvUserRepo repo;
+	final SvUserRepo repo;
+
+	public BackendAppApplication(SvUserRepo repo) {
+		this.repo = repo;
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(BackendAppApplication.class, args);
@@ -30,7 +33,7 @@ public class BackendAppApplication {
 	@Bean
 	CommandLineRunner createDefaultUser(SvUserService svUserService) {
 
-		if (!repo.existsByUsername("Administrator")) {
+		if (!repo.existsByUsername("administrator")) {
 			SvUserDTO svUser = new SvUserDTO("IT_Default", "Administrator", "ValleDelSol9150", "ROLE_IT_ADMIN");
 
 			return args -> {

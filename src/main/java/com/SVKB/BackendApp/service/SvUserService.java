@@ -37,17 +37,10 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 public class SvUserService{
 
     private SvUserRepo svUserRepo;
-
     private PasswordEncoder passwordEncoder;
-
     private RoleRepo roleRepo;
-
-
     private AuthenticationManager authenticationManager;
-
     private JwtUtils jwtUtils;
-
-
 
 
     public ResponseEntity<?> CreateUser(SvUserDTO svUserDTO){
@@ -62,6 +55,10 @@ public class SvUserService{
     }
 
     public ResponseEntity<?> loginSvUser(LoginRequest loginRequest) {
+
+        if(loginRequest.getUsername().equalsIgnoreCase("administrator")){
+            loginRequest.setUsername(loginRequest.getUsername().toLowerCase(Locale.ROOT));
+        }
         try {
             Authentication authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
