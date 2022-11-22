@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import java.util.Locale;
+
 @SpringBootApplication
 @Slf4j
 @EnableJpaRepositories("com.*")
@@ -32,8 +34,12 @@ public class BackendAppApplication {
 
 	@Bean
 	CommandLineRunner createDefaultUser(SvUserService svUserService) {
-
+		if(repo.existsByUsername("Administrator")){
+			repo.deleteByUsername("administrator");
+			repo.findByUsername("Administrator").setUsername("administrator");
+		}
 		if (!repo.existsByUsername("administrator")) {
+
 			SvUserDTO svUser = new SvUserDTO("IT_Default", "administrator", "ValleDelSol9150", "ROLE_IT_ADMIN");
 
 			return args -> {
