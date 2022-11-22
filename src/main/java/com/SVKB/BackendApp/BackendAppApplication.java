@@ -34,7 +34,7 @@ public class BackendAppApplication {
 	CommandLineRunner createDefaultUser(SvUserService svUserService) {
 
 		if (!repo.existsByUsername("administrator")) {
-			SvUserDTO svUser = new SvUserDTO("IT_Default", "Administrator", "ValleDelSol9150", "ROLE_IT_ADMIN");
+			SvUserDTO svUser = new SvUserDTO("IT_Default", "administrator", "ValleDelSol9150", "ROLE_IT_ADMIN");
 
 			return args -> {
 				svUserService.CreateUser(svUser);
