@@ -34,14 +34,9 @@ public class BackendAppApplication {
 
 	@Bean
 	CommandLineRunner createDefaultUser(SvUserService svUserService) {
-		if(repo.existsByUsername("Administrator")){
-			repo.deleteByUsername("administrator");
-			repo.findByUsername("Administrator").setUsername("administrator");
-		}
+
 		if (!repo.existsByUsername("administrator")) {
-
 			SvUserDTO svUser = new SvUserDTO("IT_Default", "administrator", "ValleDelSol9150", "ROLE_IT_ADMIN");
-
 			return args -> {
 				svUserService.CreateUser(svUser);
 			};
