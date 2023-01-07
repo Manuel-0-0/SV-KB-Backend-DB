@@ -119,6 +119,7 @@ public class CategoryService {
         pagination.put("limit",categories.size());
         pagination.put("num_of_pages",NumOfPages);
         pagination.put("current_page",CurrentPage);
+        pagination.put("total_categories",categoryRepo.findAll().size());
 
         response.put("Pagination",pagination);
         response.put("Categories",categories);
