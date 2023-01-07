@@ -56,7 +56,7 @@ public class CategoryService {
         public ResponseEntity<?> categoryByName(String name,int pag, int NoContent, String order){
         List<CategoryModel> categories = categoryRepo.findCategoryModelByCategoryName(name,sort(pag, NoContent,order));
         if(!(categories ==null)){
-            return ResponseEntity.ok().body(getcategories(categories));
+            return ResponseEntity.ok().body(getcategories(categories,NoContent,pag));
         }else{
             return ResponseEntity.ok("no categories found");
         }
@@ -79,7 +79,7 @@ public class CategoryService {
 
         List<CategoryModel> categories=categoryRepo.findAllCat(sort(pag, NoContent,order));
         log.info(categories.toString());
-        return ResponseEntity.ok().body(getcategories(categories));
+        return ResponseEntity.ok().body(getcategories(categories,NoContent,pag));
     }
 
     public CategoryModel MapFromDtoToCategoryModel(CategoryModelDto categoryModelDto){
@@ -107,10 +107,22 @@ public class CategoryService {
         }
         return Sort.by(Sort.Direction.DESC, "Id");
     }
-    private Object getcategories(List<CategoryModel> all) {
+    private Object getcategories(List<CategoryModel> all,  int NoContent,int CurrentPage) {
         HashSet<Object> categories= new HashSet<Object>() ;
+        Map<String, Object> response= new HashMap<>();
+
+
+        Map<String, Object> pagination=new HashMap<>();
         categories.addAll(all);
-        return categories;
+
+        int NumOfPages=categoryRepo.findAll().size()/NoContent;
+        pagination.put("limit",categories.size());
+        pagination.put("num_of_pages",NumOfPages);
+        pagination.put("current_page",CurrentPage);
+
+        response.put("Pagination",pagination);
+        response.put("Categories",categories);
+        return response;
     }
 
 }
