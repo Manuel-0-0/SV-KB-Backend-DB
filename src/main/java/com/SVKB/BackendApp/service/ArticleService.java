@@ -9,10 +9,8 @@ import com.SVKB.BackendApp.repo.ArticleRepo;
 import com.SVKB.BackendApp.repo.CategoryRepo;
 import com.SVKB.BackendApp.repo.SvUserRepo;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -87,7 +85,7 @@ public class ArticleService {
         if(all==null) {
             return ResponseEntity.ok().body("no results found!");
         }
-            return ResponseEntity.ok().body(PagedArticlesPlus(all));
+            return ResponseEntity.ok().body(PagedArticlesPlus(all,NoContent,pag));
         }
 
     @Transactional
@@ -97,7 +95,7 @@ public class ArticleService {
         if(all==null) {
             return ResponseEntity.ok().body("no results found!");
         }
-        return ResponseEntity.ok().body(PagedArticlesPlus(all));
+        return ResponseEntity.ok().body(PagedArticlesPlus(all,NoContent,pag));
     }
 
 
@@ -122,7 +120,7 @@ public class ArticleService {
             return ResponseEntity.badRequest().body("Category not found.");
         }
         List<ArticleModel> results= articleRepo.articlesByCategories(CategoryId,sort(pag, NoContent,order));
-        return ResponseEntity.status(HttpStatus.OK).body(PagedArticlesPlus(results));
+        return ResponseEntity.status(HttpStatus.OK).body(PagedArticlesPlus(results,NoContent,pag));
 
     }
 
@@ -132,7 +130,7 @@ public class ArticleService {
             return ResponseEntity.badRequest().body("Category not found.");
         }
         List<ArticleModel> results= articleRepo.publishedArticlesByCategories(CategoryId,sort(pag, NoContent,order));
-        return ResponseEntity.status(HttpStatus.OK).body(PagedArticlesPlus(results));
+        return ResponseEntity.status(HttpStatus.OK).body(PagedArticlesPlus(results,NoContent,pag));
 
     }
 
@@ -147,7 +145,7 @@ public class ArticleService {
     public ResponseEntity<?> articleByUsr(Long id,int pag, int NoContent, String order){
         if(svUserRepo.existsById(id)){
             List<ArticleModel> all= articleRepo.findArticleModelByUser(id,sort(pag, NoContent,order));
-            return ResponseEntity.ok().body(PagedArticlesPlus(all));
+            return ResponseEntity.ok().body(PagedArticlesPlus(all,NoContent,pag));
         }else{
             return ResponseEntity.badRequest().body("No User Found");
         }
@@ -163,9 +161,9 @@ public class ArticleService {
         List<ArticleModel> allTrue=articleRepo.findArticleModelByDraftStatusIsTrue(sort(pag, NoContent,order));
         List<ArticleModel> allFalse=articleRepo.findArticleModelByDraftStatusIsFalse(sort(pag, NoContent,order));
         if(status.equalsIgnoreCase("false")){
-            return ResponseEntity.ok().body(PagedArticlesPlus(allTrue));
+            return ResponseEntity.ok().body(PagedArticlesPlus(allTrue,NoContent,pag));
         }else if(status.equalsIgnoreCase("true")){
-            return ResponseEntity.ok().body(PagedArticlesPlus(allFalse));
+            return ResponseEntity.ok().body(PagedArticlesPlus(allFalse,NoContent,pag));
         }else{
             return ResponseEntity.badRequest().body("Invalid DraftStatus");
         }
@@ -189,7 +187,8 @@ public class ArticleService {
     @Transactional
     public ResponseEntity<?> AllArticles(int pag, int NoContent, String order){
         List<ArticleModel> all = articleRepo.findAll(sort(pag, NoContent,order));
-        return ResponseEntity.ok().body(PagedArticlesPlus(all));
+        int listCounter=all.size();
+        return ResponseEntity.ok().body(PagedArticlesPlus(all,NoContent,pag));
     }
 
     //sorter
@@ -218,12 +217,27 @@ public class ArticleService {
     }
 
     //get all articles as a page
-    private Object PagedArticlesPlus(List<ArticleModel> all) {
-        HashSet<Object> Articless= new HashSet<Object>();
+    private Map<String, Object> PagedArticlesPlus(List<ArticleModel> all, int NoContent,int CurrentPage) {
+        Map<String, Object> response= new HashMap<>();
+        HashSet<Object> articles= new HashSet<>();
+
         for (ArticleModel one:all) {
-            Articless.add(ListMapper(one));
+            articles.add(ListMapper(one));
         }
-        return Articless;
+
+        log.info(String.valueOf(articles.size()));
+
+        Map<String, Object> pagination=new HashMap<>();
+        int NumOfPages=articleRepo.findAll().size()/NoContent;
+
+        pagination.put("limit",articles.size());
+        pagination.put("num_of_pages",NumOfPages);
+        pagination.put("current_page",CurrentPage);
+
+        response.put("Pagination",pagination);
+        response.put("Articles",articles);
+
+        return response;
     }
 
 
