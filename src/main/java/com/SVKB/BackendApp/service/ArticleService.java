@@ -234,6 +234,7 @@ public class ArticleService {
         pagination.put("num_of_pages",NumOfPages);
         pagination.put("current_page",CurrentPage);
         pagination.put("total_articles",articleRepo.findAll().size());
+        pagination.put("current_num_of_aricles",articles.size());
 
         response.put("Pagination",pagination);
         response.put("Articles",articles);
